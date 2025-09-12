@@ -1,102 +1,98 @@
-import React from 'react'
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Upload, Plus, SquarePlus } from 'lucide-react';
 
-const VendorDetails = () => {
-    const vendor = vendors.find(v => v.id === selectedVendor);
-    if (!vendor) return null;
-
+const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModal, setEditingProduct }) => {
+  const { vendorId } = useParams();
+  const navigate = useNavigate();
+  const vendor = vendors.find(v => v.id === parseInt(vendorId));
+  
+  if (!vendor) {
     return (
-      <div className="min-h-screen bg-gray-100">
-        
-        <div className="p-6">
-          <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-            <div className="bg-teal-600 text-white px-4 py-3 flex items-center justify-between">
-              <span className="font-medium">Vendor List</span>
-              <div className="flex gap-2">
-                <button className="bg-white text-teal-600 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
-                  <Upload className="w-4 h-4" />
-                  Upload Excel
-                </button>
-                <button
-                  onClick={() => setCurrentView('add')}
-                  className="bg-white text-teal-600 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50"
-                >
-                  Add New Vendor
-                </button>
-              </div>
-            </div>
-            
-            {/* Vendor Summary Row */}
-            <div className="px-4 py-3 bg-gray-50 border-b">
-              <div className="grid grid-cols-6 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-gray-600">Vendor Name</span>
-                  <div className="text-gray-900 mt-1">{vendor.name}</div>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-600">Product Name</span>
-                  <div className="text-gray-900 mt-1">-</div>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-600">Rate</span>
-                  <div className="text-gray-900 mt-1">-</div>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-600">Unit</span>
-                  <div className="text-gray-900 mt-1">-</div>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-600">Rate per unit</span>
-                  <div className="text-gray-900 mt-1">-</div>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-600">Action</span>
-                  <div className="text-gray-900 mt-1">-</div>
-                </div>
-              </div>
-            </div>
+      <div className="min-h-screen bg-gray-100 p-6">
+        <div className="bg-white rounded-lg p-6 shadow-sm">
+          <p className="text-gray-600">Vendor not found</p>
+          <button
+            onClick={() => navigate('/vendors')}
+            className="mt-4 bg-cyan-800 text-white px-4 py-2 rounded text-sm font-medium hover:bg-cyan-900"
+          >
+            Back to Vendor List
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-            {/* Main Vendor Row with Add Product Button */}
-            <div className="px-4 py-3 border-b bg-white">
-              <div className="grid grid-cols-6 gap-4 items-center">
-                <div>
-                  <div className="text-sm font-medium text-gray-600">Vendor Name</div>
-                  <div className="text-gray-900">{vendor.name}</div>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-600">Total Products</div>
-                  <div className="text-gray-900">{vendor.totalProducts}</div>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-600">Gst. No</div>
-                  <div className="text-gray-900">{vendor.gstNo}</div>
-                </div>
-                <div></div>
-                <div>
-                  <div className="text-sm font-medium text-gray-600">Add Product</div>
-                  <button
-                    onClick={() => {
-                      setSelectedVendor(vendor.id);
-                      setShowAddProductModal(true);
-                    }}
-                    className="bg-orange-500 text-white w-7 h-7 rounded flex items-center justify-center hover:bg-orange-600 mt-1"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-600">View Details</div>
-                  <button
-                    onClick={() => setCurrentView('list')}
-                    className="text-blue-500 hover:text-blue-700 font-medium text-sm mt-1"
-                  >
-                    Click
-                  </button>
-                </div>
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="p-6">
+        <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+          <div className="bg-cyan-800 text-white px-4 py-3 flex items-center justify-between">
+            <span className="font-medium">Product List</span>
+            <div className="flex gap-2">
+              <button className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
+                <Upload className="w-4 h-4" />
+                Upload Excel
+              </button>
+              <button
+                onClick={() => navigate('/vendors')}
+                className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50"
+              >
+                Back to List
+              </button>
+            </div>
+          </div>
+          
+          {/* Vendor Summary Row */}
+          <div className="px-4 py-3 bg-gray-50 border-b">
+            <div className="grid grid-cols-6 gap-4 text-sm">
+              <div>
+                <span className="font-medium text-gray-600">Vendor Name</span>
+                <div className="text-gray-900 mt-1">{vendor.name}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Phone</span>
+                <div className="text-gray-900 mt-1">{vendor.phone}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">GST No</span>
+                <div className="text-gray-900 mt-1">{vendor.gstNo}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">PAN No</span>
+                <div className="text-gray-900 mt-1">{vendor.panNo}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Total Products</span>
+                <div className="text-gray-900 mt-1">{vendor.totalProducts}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-600">Add Product</span>
+                <button
+                  onClick={() => setShowAddProductModal(true)}
+                  className="w-7 h-7 rounded flex items-center justify-center mt-1"
+                >
+                  <SquarePlus className="w-6 h-6 text-orange-400" />
+                </button>
               </div>
             </div>
-            
-            {/* Products List */}
-            <div className="overflow-x-auto">
+          </div>
+
+          {/* Products Header */}
+          <div className="px-4 py-3 bg-gray-100 border-b">
+            <div className="grid grid-cols-6 gap-4 text-sm font-medium text-gray-600">
+              <div>Product Name</div>
+              <div>Category</div>
+              <div>Description</div>
+              <div>Unit</div>
+              <div>Rate per unit</div>
+              <div>Action</div>
+            </div>
+          </div>
+          
+          {/* Products List */}
+          <div className="overflow-x-auto">
+            {vendor.products.length > 0 ? (
               <table className="w-full">
                 <tbody className="divide-y divide-gray-200">
                   {vendor.products.map((product) => (
@@ -112,7 +108,7 @@ const VendorDetails = () => {
                             setEditingProduct(product);
                             setShowEditProductModal(true);
                           }}
-                          className="bg-teal-600 text-white px-4 py-1 rounded text-sm hover:bg-teal-700"
+                          className="bg-cyan-800 text-white px-4 py-1 rounded text-sm hover:bg-teal-700"
                         >
                           Update
                         </button>
@@ -121,11 +117,16 @@ const VendorDetails = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            ) : (
+              <div className="px-4 py-8 text-center text-gray-500">
+                No products added yet. Click the Add Product button to add products.
+              </div>
+            )}
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-export default VendorDetails
+export default VendorDetails;

@@ -1,8 +1,9 @@
 import { Edit, SquarePlus } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
-const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
+const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal, handleAddProduct }) => {
   const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-blue-100 p-6">
       <h1 className='text-3xl font-bold text-black-100 pb-6'>Vendor</h1>
@@ -10,15 +11,14 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
         <div className="bg-white rounded-lg overflow-hidden shadow-sm">
           <div className="text-black-100 px-4 py-3 flex items-center justify-between">
             <button className="bg-cyan-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-900 cursor-pointer">
-                Vendor List
-                </button>
+              Vendor List
+            </button>
             <button
-  onClick={() => navigate(`/vendors/${vendor.id}`)}
-  className="text-cyan-800 bg-cyan-100 py-1 px-4 rounded-md hover:text-white hover:bg-cyan-800 font-medium text-sm cursor-pointer"
->
-  Click
-</button>
-
+              onClick={() => navigate('/vendors/add')}
+              className="bg-white text-cyan-800 px-4 py-2 border border-cyan-800 rounded-lg text-sm font-medium hover:bg-gray-50"
+            >
+              Add New Vendor
+            </button>
           </div>
           
           <div className="overflow-x-auto">
@@ -50,19 +50,18 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
                           setSelectedVendor(vendor.id);
                           setShowAddProductModal(true);
                         }}
-                        className=" rounded flex items-center justify-center cursor-pointer"
+                        className="rounded flex items-center justify-center cursor-pointer"
                       >
                         <SquarePlus className="w-6 h-6 text-orange-400" />
                       </button>
                     </td>
                     <td className="px-4 py-3">
                       <button
-  onClick={() => navigate(`/vendors/${vendor.id}`)}
-  className="text-cyan-800 bg-cyan-100 py-1 px-4 rounded-md hover:text-white hover:bg-cyan-800 font-medium text-sm cursor-pointer"
->
-  Click
-</button>
-
+                        onClick={() => navigate(`/vendors/${vendor.id}`)}
+                        className="text-cyan-800 bg-cyan-100 py-1 px-4 rounded-md hover:text-white hover:bg-cyan-800 font-medium text-sm cursor-pointer"
+                      >
+                        Click
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -75,4 +74,4 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
   )
 }
 
-export default VendorList
+export default VendorList;

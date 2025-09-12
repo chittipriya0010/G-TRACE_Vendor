@@ -1,7 +1,9 @@
 import { SquarePlus, Upload } from 'lucide-react';
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const AddVendor = ({ handleAddVendor }) => {
+  const navigate = useNavigate();
   const [newVendor, setNewVendor] = useState({
     name: '',
     phone: '',
@@ -25,6 +27,21 @@ const AddVendor = ({ handleAddVendor }) => {
     const updatedProducts = [...newVendor.products];
     updatedProducts[index][field] = value;
     setNewVendor({ ...newVendor, products: updatedProducts });
+  };
+
+  const handleSubmit = () => {
+    // Filter out empty products
+    const validProducts = newVendor.products.filter(p => p.name && p.rate);
+    const vendorToAdd = {
+      ...newVendor,
+      products: validProducts.map((p, idx) => ({
+        ...p,
+        id: Date.now() + idx,
+        rate: parseFloat(p.rate)
+      }))
+    };
+    handleAddVendor(vendorToAdd);
+    navigate('/vendors');
   };
 
 
