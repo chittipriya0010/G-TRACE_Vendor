@@ -55,7 +55,7 @@ const EditProductModal = ({
       <div className="flex gap-3 mt-6">
         <button
           onClick={() => handleEditProduct(selectedVendor.id, editingProduct.id, editingProduct)}
-          className="flex-1 bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 font-medium text-sm"
+          className="flex-1 btn-primary"
         >
           Update Product
         </button>
@@ -64,7 +64,7 @@ const EditProductModal = ({
             setShowEditProductModal(false);
             setEditingProduct(null);
           }}
-          className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 font-medium text-sm"
+          className="flex-1 btn-secondary"
         >
           Cancel
         </button>

@@ -35,7 +35,6 @@ function VendorProvider({ children }) {
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [showEditProductModal, setShowEditProductModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [newProduct, setNewProduct] = useState({ name: "", rate: "", unit: "Pcs" });
 
   const handleAddVendor = (newVendor) => {
     const vendor = {
@@ -46,25 +45,24 @@ function VendorProvider({ children }) {
     setVendors([...vendors, vendor]);
   };
 
-  const handleAddProduct = (vendorId) => {
-    const product = {
-      ...newProduct,
-      id: Date.now(),
-      rate: parseFloat(newProduct.rate),
-    };
-
-    setVendors(
-      vendors.map((vendor) =>
-        vendor.id === vendorId
-          ? { ...vendor, products: [...vendor.products, product], totalProducts: vendor.products.length + 1 }
-          : vendor
-      )
-    );
-
-    setNewProduct({ name: "", rate: "", unit: "Pcs" });
-    setShowAddProductModal(false);
-    setSelectedVendor(null);
+  const handleAddProduct = (vendorId, productData) => {
+  const product = {
+    ...productData,
+    id: Date.now(),
+    rate: parseFloat(productData.rate),
   };
+
+  setVendors(
+    vendors.map((vendor) =>
+      vendor.id === vendorId
+        ? { ...vendor, products: [...vendor.products, product], totalProducts: vendor.products.length + 1 }
+        : vendor
+    )
+  );
+
+  setShowAddProductModal(false);
+  setSelectedVendor(null);
+};
 
   const handleEditProduct = (vendorId, productId, updatedProduct) => {
     setVendors(
@@ -94,8 +92,6 @@ function VendorProvider({ children }) {
         handleAddVendor,
         handleAddProduct,
         handleEditProduct,
-        newProduct,
-        setNewProduct,
         selectedVendor,
         showAddProductModal,
         showEditProductModal,
@@ -105,8 +101,6 @@ function VendorProvider({ children }) {
       {/* Mount Add Product Modal */}
       {showAddProductModal && (
         <AddProductModal
-          newProduct={newProduct}
-          setNewProduct={setNewProduct}
           handleAddProduct={handleAddProduct}
           selectedVendor={selectedVendor}
           setShowAddProductModal={setShowAddProductModal}

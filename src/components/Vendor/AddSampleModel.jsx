@@ -5,10 +5,18 @@ const AddProductModal = ({
   handleAddProduct,
   selectedVendor,
   setShowAddProductModal,
-  setSelectedVendor,
 }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
-    defaultValues: { name: "", rate: "", unit: "Pcs" },
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      rate: "",
+      unit: "Pcs",
+    },
   });
 
   const onSubmit = (data) => {
@@ -23,7 +31,7 @@ const AddProductModal = ({
   };
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-transparent flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-[80%] shadow-lg">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -56,33 +64,42 @@ const AddProductModal = ({
             {/* Product Name */}
             <div className="w-1/5">
               <input
-              {...register("name", { required: "Product name is required" })}
-              placeholder="Enter product"
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-            />
-            {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+                type="text"
+                {...register("name", { required: "Product name is required" })}
+                placeholder="Enter product"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Rate */}
             <div className="w-1/5">
               <input
-              type="number"
-              {...register("rate", { required: "Rate is required", min: { value: 1, message: "Rate must be positive" } })}
-              placeholder="₹ 100"
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-            />
-            {errors.rate && <p className="text-red-500 text-xs">{errors.rate.message}</p>}
+                type="number"
+                step="0.01"
+                {...register("rate", {
+                  required: "Rate is required",
+                  min: { value: 1, message: "Rate must be greater than 0" },
+                })}
+                placeholder="₹ 100"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+              {errors.rate && (
+                <p className="text-xs text-red-500 mt-1">{errors.rate.message}</p>
+              )}
             </div>
 
             {/* Unit */}
             <div className="w-1/5">
               <select
-              {...register("unit", { required: "Unit is required" })}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-            >
-              <option value="Pcs">Pcs</option>
-              <option value="Bundle">Bundle</option>
-            </select>
+                {...register("unit", { required: "Unit is required" })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              >
+                <option value="Pcs">Pcs</option>
+                <option value="Bundle">Bundle</option>
+              </select>
               {errors.unit && (
                 <p className="text-xs text-red-500 mt-1">{errors.unit.message}</p>
               )}
@@ -92,7 +109,7 @@ const AddProductModal = ({
             <div className="w-1/5 flex items-center">
               <button
                 type="submit"
-                className="bg-teal-600 hover:bg-cyan-900 text-white py-2 px-4 rounded-md text-sm font-medium"
+                className="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md text-sm font-medium"
               >
                 Save
               </button>
