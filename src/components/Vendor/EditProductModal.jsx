@@ -1,4 +1,3 @@
-import React from 'react';
 
 const EditProductModal = ({ 
   editingProduct, 
@@ -6,8 +5,10 @@ const EditProductModal = ({
   handleEditProduct, 
   selectedVendor, 
   setShowEditProductModal 
-}) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+}) => {
+
+  return(
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div className="bg-white rounded-lg p-6 w-96 mx-4">
       <h3 className="text-lg font-medium mb-4 text-gray-800">Edit Product</h3>
       
@@ -19,7 +20,7 @@ const EditProductModal = ({
           <input
             type="text"
             value={editingProduct?.name || ''}
-            onChange={(e) => setEditingProduct({...editingProduct, name: e.target.value})}
+            onChange={(e) => setEditingProduct(prev => ({ ...prev, name: e.target.value }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
@@ -31,7 +32,7 @@ const EditProductModal = ({
           <input
             type="number"
             value={editingProduct?.rate || ''}
-            onChange={(e) => setEditingProduct({...editingProduct, rate: e.target.value})}
+            onChange={(e) => setEditingProduct(prev => ({ ...prev, rate: e.target.value }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
@@ -42,7 +43,7 @@ const EditProductModal = ({
           </label>
           <select
             value={editingProduct?.unit || 'Pcs'}
-            onChange={(e) => setEditingProduct({...editingProduct, unit: e.target.value})}
+            onChange={(e) => setEditingProduct(prev => ({ ...prev, unit: e.target.value }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           >
             <option value="Pcs">Pcs</option>
@@ -53,7 +54,7 @@ const EditProductModal = ({
       
       <div className="flex gap-3 mt-6">
         <button
-          onClick={() => handleEditProduct(selectedVendor, editingProduct.id, editingProduct)}
+          onClick={() => handleEditProduct(selectedVendor.id, editingProduct.id, editingProduct)}
           className="flex-1 bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 font-medium text-sm"
         >
           Update Product
@@ -70,6 +71,7 @@ const EditProductModal = ({
       </div>
     </div>
   </div>
-);
+  )
+}
 
 export default EditProductModal;

@@ -1,4 +1,3 @@
-// VendorRoutes.jsx
 import VendorDetails from "../../components/Vendor/VendorDetails";
 import AddVendor from "../../components/Vendor/AddVendor";
 import VendorList from "../../components/Vendor/VendorList";
@@ -119,6 +118,7 @@ function VendorProvider({ children }) {
       {showEditProductModal && editingProduct && (
         <EditProductModal
           editingProduct={editingProduct}
+          setEditingProduct={setEditingProduct}
           setShowEditProductModal={setShowEditProductModal}
           handleEditProduct={handleEditProduct}
           selectedVendor={selectedVendor}
@@ -156,12 +156,13 @@ const VendorRoutes = [
     path: ":vendorId",
     element: (
       <VendorProvider>
-        {({ vendors, setShowAddProductModal, setShowEditProductModal, setEditingProduct }) => (
+        {({ vendors, setShowAddProductModal, setShowEditProductModal, setEditingProduct, setSelectedVendor }) => (
           <VendorDetails
             vendors={vendors}
             setShowAddProductModal={setShowAddProductModal}
             setShowEditProductModal={setShowEditProductModal}
             setEditingProduct={setEditingProduct}
+            setSelectedVendor={setSelectedVendor}
           />
         )}
       </VendorProvider>

@@ -1,8 +1,7 @@
-import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Upload, Plus, SquarePlus } from 'lucide-react';
+import { Upload, SquarePlus } from 'lucide-react';
 
-const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModal, setEditingProduct }) => {
+const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModal, setEditingProduct, setSelectedVendor }) => {
   const { vendorId } = useParams();
   const navigate = useNavigate();
   const vendor = vendors.find(v => v.id === parseInt(vendorId));
@@ -105,6 +104,7 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
                       <td className="px-4 py-3 w-1/6">
                         <button
                           onClick={() => {
+                            setSelectedVendor(vendor);
                             setEditingProduct(product);
                             setShowEditProductModal(true);
                           }}

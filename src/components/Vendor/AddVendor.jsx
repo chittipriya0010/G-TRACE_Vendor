@@ -218,7 +218,7 @@ const AddVendor = ({ handleAddVendor }) => {
               </div>
 
               <button
-                onClick={handleAddVendor}
+                onClick={handleSubmit}
                 className="w-full bg-teal-600 text-white py-3 px-4 rounded-md hover:bg-teal-700 font-medium text-sm"
               >
                 Submit
