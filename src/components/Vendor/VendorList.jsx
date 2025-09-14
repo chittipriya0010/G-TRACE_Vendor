@@ -47,7 +47,7 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
                     <td className="px-4 py-3 flex justify-center">
                       <button
                         onClick={() => {
-                          setSelectedVendor(vendor.id);
+                          setSelectedVendor(vendor);
                           setShowAddProductModal(true);
                         }}
                         className="add-product"

@@ -1,12 +1,7 @@
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-const AddProductModal = ({
-  handleAddProduct,
-  selectedVendor,
-  setShowAddProductModal,
-  setSelectedVendor,
-}) => {
+const AddProductModal = ({ handleAddProduct, selectedVendor, setShowAddProductModal, setSelectedVendor }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: { name: "", rate: "", unit: "Pcs" },
   });
@@ -18,8 +13,9 @@ const AddProductModal = ({
   };
 
   const handleClose = () => {
-    reset();
     setShowAddProductModal(false);
+    setSelectedVendor(null)
+    reset();
   };
 
   return (

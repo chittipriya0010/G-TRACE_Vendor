@@ -69,7 +69,7 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
                 <span className="font-medium text-gray-600">Add Product</span>
                 <button
                   onClick={() => {
-                    setSelectedVendor(vendor.id);
+                    setSelectedVendor(vendor);
                     setShowAddProductModal(true)
                   }}
                   className="add-product"
