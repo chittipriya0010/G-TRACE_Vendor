@@ -1,7 +1,7 @@
 import { Edit, SquarePlus } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
-const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal, handleAddProduct }) => {
+const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal }) => {
   const navigate = useNavigate();
   
   return (
@@ -15,7 +15,7 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal, handle
             </button>
             <button
               onClick={() => navigate('/vendors/add')}
-              className="bg-white text-cyan-800 px-4 py-2 border border-cyan-800 rounded-lg text-sm font-medium hover:bg-gray-50"
+              className="btn-secondary"
             >
               Add New Vendor
             </button>
@@ -47,12 +47,12 @@ const VendorList = ({ vendors, setSelectedVendor, setShowAddProductModal, handle
                     <td className="px-4 py-3 flex justify-center">
                       <button
                         onClick={() => {
-                          setSelectedVendor(vendor.id);
+                          setSelectedVendor(vendor);
                           setShowAddProductModal(true);
                         }}
-                        className="rounded flex items-center justify-center cursor-pointer"
+                        className="add-product"
                       >
-                        <SquarePlus className="w-6 h-6 text-orange-400" />
+                        <SquarePlus className="w-6 h-6" />
                       </button>
                     </td>
                     <td className="px-4 py-3">

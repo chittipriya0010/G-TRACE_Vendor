@@ -5,7 +5,7 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
   const { vendorId } = useParams();
   const navigate = useNavigate();
   const vendor = vendors.find(v => v.id === parseInt(vendorId));
-  
+
   if (!vendor) {
     return (
       <div className="min-h-screen bg-gray-100 p-6">
@@ -29,19 +29,19 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
           <div className="bg-cyan-800 text-white px-4 py-3 flex items-center justify-between">
             <span className="font-medium">Product List</span>
             <div className="flex gap-2">
-              <button className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
+              {/* <button className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
                 <Upload className="w-4 h-4" />
                 Upload Excel
-              </button>
+              </button> */}
               <button
                 onClick={() => navigate('/vendors')}
-                className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50"
+                className="btn-secondary"
               >
                 Back to List
               </button>
             </div>
           </div>
-          
+
           {/* Vendor Summary Row */}
           <div className="px-4 py-3 bg-gray-50 border-b">
             <div className="grid grid-cols-6 gap-4 text-sm">
@@ -68,10 +68,13 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
               <div>
                 <span className="font-medium text-gray-600">Add Product</span>
                 <button
-                  onClick={() => setShowAddProductModal(true)}
-                  className="w-7 h-7 rounded flex items-center justify-center mt-1"
+                  onClick={() => {
+                    setSelectedVendor(vendor);
+                    setShowAddProductModal(true)
+                  }}
+                  className="add-product"
                 >
-                  <SquarePlus className="w-6 h-6 text-orange-400" />
+                  <SquarePlus className="w-6 h-6" />
                 </button>
               </div>
             </div>
@@ -79,16 +82,16 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
 
           {/* Products Header */}
           <div className="px-4 py-3 bg-gray-100 border-b">
-            <div className="grid grid-cols-6 gap-4 text-sm font-medium text-gray-600">
+            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-gray-600">
               <div>Product Name</div>
-              <div>Category</div>
-              <div>Description</div>
+              {/* <div>Category</div>
+              <div>Description</div> */}
               <div>Unit</div>
               <div>Rate per unit</div>
               <div>Action</div>
             </div>
           </div>
-          
+
           {/* Products List */}
           <div className="overflow-x-auto">
             {vendor.products.length > 0 ? (
@@ -97,8 +100,8 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
                   {vendor.products.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.name}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td>
+                      {/* <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td>
+                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td> */}
                       <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.unit}</td>
                       <td className="px-4 py-3 text-sm text-gray-900 w-1/6">₹ {product.rate}</td>
                       <td className="px-4 py-3 w-1/6">
@@ -108,7 +111,7 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
                             setEditingProduct(product);
                             setShowEditProductModal(true);
                           }}
-                          className="bg-cyan-800 text-white px-4 py-1 rounded text-sm hover:bg-teal-700"
+                          className="btn-small"
                         >
                           Update
                         </button>

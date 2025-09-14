@@ -8,3 +8,20 @@
   --color-gray-200:#8a9099;
   --color-black-100:#272b2c;
   }
+
+
+.add-product {
+  @apply  text-orange-500 hover:text-orange-700 flex justify-center;
+}
+
+.btn-primary {
+  @apply bg-cyan-800 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-cyan-900 cursor-pointer
+}
+
+.btn-secondary {
+  @apply bg-white text-cyan-800 px-4 py-2 border border-cyan-800 rounded-md text-sm font-medium hover:bg-gray-50 cursor-pointer
+}
+
+.btn-small {
+  @apply bg-cyan-800 text-white px-4 py-1 rounded-md text-sm font-medium hover:bg-cyan-900 cursor-pointer
+}

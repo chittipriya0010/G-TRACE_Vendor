@@ -1,234 +1,223 @@
-import { SquarePlus, Upload } from 'lucide-react';
-import { useState } from 'react'
+import { SquarePlus, Trash2, Upload } from 'lucide-react';
+import { useDropzone } from "react-dropzone";
 import { useNavigate } from 'react-router-dom';
+import { useForm, useFieldArray } from "react-hook-form";
+import { useCallback } from 'react';
 
 const AddVendor = ({ handleAddVendor }) => {
   const navigate = useNavigate();
-  const [newVendor, setNewVendor] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    gstNo: '',
-    panNo: '',
-    accountNo: '',
-    products: [{ name: "", rate: "", unit: "Pcs" }]
+
+  const { register, handleSubmit, control, setValue, watch , formState: { errors } } = useForm({
+    defaultValues: {
+      name: '',
+      phone: '',
+      address: '',
+      gstNo: '',
+      panNo: '',
+      accountNo: '',
+      products: [{ name: "", rate: "", unit: "Pcs" }],
+      gstFile: null
+    }
   });
 
-  // Add blank product
-  const handleAddProduct = () => {
-    setNewVendor({
-      ...newVendor,
-      products: [...newVendor.products, { name: "", rate: "", unit: "Pcs" }],
+  const gstFile = watch("gstFile");
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "products"
+  });
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      setValue("gstFile", acceptedFiles[0]);
+    }
+  }, [setValue]);
+
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "application/pdf": [".pdf"],
+      "image/*": []
+    },
+    multiple: false
+  });
+
+  const onSubmit = (data) => {
+    console.log("data", data)
+    const validProducts = data.products.filter(p => p.name && p.rate);
+    handleAddVendor({
+      ...data,
+      products: validProducts.map((p, idx) => ({ ...p, id: Date.now() + idx, rate: parseFloat(p.rate) }))
     });
-  };
-
-  // Update product fields
-  const handleProductChange = (index, field, value) => {
-    const updatedProducts = [...newVendor.products];
-    updatedProducts[index][field] = value;
-    setNewVendor({ ...newVendor, products: updatedProducts });
-  };
-
-  const handleSubmit = () => {
-    // Filter out empty products
-    const validProducts = newVendor.products.filter(p => p.name && p.rate);
-    const vendorToAdd = {
-      ...newVendor,
-      products: validProducts.map((p, idx) => ({
-        ...p,
-        id: Date.now() + idx,
-        rate: parseFloat(p.rate)
-      }))
-    };
-    handleAddVendor(vendorToAdd);
     navigate('/vendors');
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen p-6">
       <h1 className='text-3xl font-bold text-black-100 pb-6'>Add New Vendor</h1>
-      <div>
-        <div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Fill Vendor Details */}
-            <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
-              <h3 className="font-medium text-gray-700 text-2xl">Fill Vendor Details</h3>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">
-                      Vendor Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={newVendor.name}
-                      onChange={(e) => setNewVendor({ ...newVendor, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Amar Kapila"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">
-                      Phone No *
-                    </label>
-                    <input
-                      type="text"
-                      value={newVendor.phone}
-                      onChange={(e) => setNewVendor({ ...newVendor, phone: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="9943225422"
-                    />
-                  </div>
-                </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row max-lg:flex-col justify-center item-start gap-8">
 
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Address *
-                  </label>
-                  <input
-                    type="text"
-                    value={newVendor.address}
-                    onChange={(e) => setNewVendor({ ...newVendor, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    placeholder="2, Nehru Ramakrishna Building, Trinity Circle, M.G Road, 560006"
-                  />
-                </div>
+        {/* Vendor Details */}
+        <div className="w-[60%] max-lg:w-full bg-white rounded-lg p-6 shadow-sm space-y-6">
+          <h3 className="font-medium text-gray-700 text-2xl">Fill Vendor Details</h3>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">Vendor Name *</label>
+                <input
+                  {...register("name", { required: "Vendor name is required" })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  placeholder="Amar Kapila"
+                />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
               </div>
 
-              {/* Products Section */}
-                <div>
-                  <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
-
-                    {/* Products Section */}
-                    <div>
-                      <div className="mb-4 font-medium text-gray-700">Products</div>
-
-                      <div className="space-y-3">
-                        {/* Header */}
-                        <div className="grid grid-cols-4 gap-2 text-sm text-gray-600 font-medium">
-                          <span>Product Name *</span>
-                          <span>Rate *</span>
-                          <span>Unit *</span>
-                          <span className='text-center'>Add</span>
-                        </div>
-
-                        {/* Rows */}
-                        {newVendor.products.map((product, index) => (
-                          <div key={index} className="grid grid-cols-4 gap-2">
-                            <input
-                              type="text"
-                              value={product.name}
-                              onChange={(e) =>
-                                handleProductChange(index, "name", e.target.value)
-                              }
-                              placeholder="Enter product"
-                              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            />
-                            <input
-                              type="text"
-                              value={product.rate}
-                              onChange={(e) =>
-                                handleProductChange(index, "rate", e.target.value)
-                              }
-                              placeholder="₹ 100"
-                              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            />
-                            <select
-                              value={product.unit}
-                              onChange={(e) =>
-                                handleProductChange(index, "unit", e.target.value)
-                              }
-                              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            >
-                              <option>Pcs</option>
-                              <option>Bundle</option>
-                            </select>
-
-                            {/* Plus button for every row */}
-                            <button
-                              onClick={() => handleAddProduct(index)}
-                              className="text-orange-500 hover:text-orange-700 flex justify-center"
-                            >
-                              <SquarePlus className="w-6 h-6" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">Phone No *</label>
+                <input
+                  {...register("phone", { required: "Phone number is required" })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  placeholder="9943225422"
+                />
+                {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
               </div>
             </div>
 
-            {/* Account Details */}
-            <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
-              <h3 className="font-medium text-gray-700 text-2xl">Account Details</h3>
+            <div>
+              <label className="block text-sm text-gray-600 mb-2">Address *</label>
+              <input
+                {...register("address", { required: "Address is required" })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="2, Nehru Ramakrishna Building, Trinity Circle, M.G Road, 560006"
+              />
+              {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+            </div>
+          </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">
-                      Gst No *
-                    </label>
-                    <input
-                      type="text"
-                      value={newVendor.gstNo}
-                      onChange={(e) => setNewVendor({ ...newVendor, gstNo: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="29AAAC"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">
-                      Pan No *
-                    </label>
-                    <input
-                      type="text"
-                      value={newVendor.panNo}
-                      onChange={(e) => setNewVendor({ ...newVendor, panNo: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="AAACC0404J"
-                    />
-                  </div>
-                </div>
+          {/* Products */}
+          <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
+            <div className="mb-4 font-medium text-gray-700">Products</div>
 
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Account No *
-                  </label>
-                  <input
-                    type="text"
-                    value={newVendor.accountNo}
-                    onChange={(e) => setNewVendor({ ...newVendor, accountNo: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    placeholder="Amar Kapila"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">
-                    Upload Gst Certificate
-                  </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-md p-8 text-center">
-                    <Upload className="w-8 h-8 mx-auto text-gray-400 mb-3" />
-                    <span className="text-gray-500 text-sm">Upload Gst Certificate</span>
-                  </div>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 font-medium">
+                <span>Product Name *</span>
+                <div className='grid grid-cols-3 gap-2 text-sm text-gray-600 font-medium'>
+                  <span>Rate *</span>
+                  <span>Unit *</span>
+                  <span className='text-center'>Actions</span>
                 </div>
               </div>
 
+              {fields.map((product, index) => (
+                <div key={product.id} className="grid grid-cols-2 gap-4 items-center">
+                  <input
+                    {...register(`products.${index}.name`, { required: "Product name required" })}
+                    placeholder="Enter product"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                  <div className='grid grid-cols-3 gap-2 items-center'>
+                    <input
+                      {...register(`products.${index}.rate`, { required: "Rate required" })}
+                      placeholder="₹ 100"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    />
+                    <select
+                      {...register(`products.${index}.unit`)}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    >
+                      <option>Pcs</option>
+                      <option>Bundle</option>
+                    </select>
+                    <div className="flex justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
               <button
-                onClick={handleSubmit}
-                className="w-full bg-teal-600 text-white py-3 px-4 rounded-md hover:bg-teal-700 font-medium text-sm"
+                type="button"
+                onClick={() => append({ name: "", rate: "", unit: "Pcs" })}
+                className="flex items-center gap-2 text-teal-600 hover:text-teal-800 mt-2"
               >
-                Submit
+                <SquarePlus className="w-5 h-5" /> Add Product
               </button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
 
-export default AddVendor
+        {/* Account Details */}
+        <div className="bg-white rounded-lg p-6 shadow-sm space-y-6">
+          <h3 className="font-medium text-gray-700 text-2xl">Account Details</h3>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">Gst No *</label>
+                <input
+                  {...register("gstNo", { required: "GST number is required" })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  placeholder="29AAAC"
+                />
+                {errors.gstNo && <p className="text-red-500 text-sm">{errors.gstNo.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">Pan No *</label>
+                <input
+                  {...register("panNo", { required: "PAN number is required" })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  placeholder="AAACC0404J"
+                />
+                {errors.panNo && <p className="text-red-500 text-sm">{errors.panNo.message}</p>}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-2">Account No *</label>
+              <input
+                {...register("accountNo", { required: "Account number is required" })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              {errors.accountNo && <p className="text-red-500 text-sm">{errors.accountNo.message}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-2">Upload GST Certificate</label>
+
+              <div
+                {...getRootProps()}
+                className={`border-2 border-dashed rounded-md p-8 text-center cursor-pointer transition-colors
+      ${isDragActive ? "border-cyan-800 bg-teal-50" : "border-gray-300"}`}
+              >
+                <input {...getInputProps()} />
+                <Upload className="w-8 h-8 mx-auto text-gray-400 mb-3" />
+                {gstFile ? (
+                  <p className="text-sm text-gray-700">{gstFile.name}</p>
+                ) : (
+                  <span className="text-gray-500 text-sm">Drag & drop or click to upload</span>
+                )}
+              </div>
+            </div>
+
+          </div>
+
+          <button type="submit" className="w-full btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AddVendor;
