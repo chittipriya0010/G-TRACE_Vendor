@@ -135,7 +135,7 @@ const AddVendor = ({ handleAddVendor }) => {
                       <button
                         type="button"
                         onClick={() => remove(index)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 cursor-pointer"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
@@ -147,7 +147,7 @@ const AddVendor = ({ handleAddVendor }) => {
               <button
                 type="button"
                 onClick={() => append({ name: "", rate: "", unit: "Pcs" })}
-                className="flex items-center gap-2 text-teal-600 hover:text-teal-800 mt-2"
+                className="flex items-center gap-2 text-teal-600 hover:text-teal-800 mt-2 cursor-pointer"
               >
                 <SquarePlus className="w-5 h-5" /> Add Product
               </button>

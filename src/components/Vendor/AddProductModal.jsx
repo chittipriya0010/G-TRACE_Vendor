@@ -26,7 +26,7 @@ const AddProductModal = ({ handleAddProduct, selectedVendor, setShowAddProductMo
           <h3 className="text-lg font-semibold text-gray-800">Add Product</h3>
           <button
             onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -88,7 +88,7 @@ const AddProductModal = ({ handleAddProduct, selectedVendor, setShowAddProductMo
             <div className="w-1/5 flex items-center">
               <button
                 type="submit"
-                className="bg-teal-600 hover:bg-cyan-900 text-white py-2 px-4 rounded-md text-sm font-medium"
+                className="btn-small"
               >
                 Save
               </button>

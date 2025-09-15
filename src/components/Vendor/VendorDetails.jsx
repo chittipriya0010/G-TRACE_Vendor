@@ -23,16 +23,17 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="p-6">
+    <div className="min-h-screen p-6">
+      <h1 className='text-3xl font-bold text-black-100 pb-6'>Vendor</h1>
+
         <div className="bg-white rounded-lg overflow-hidden shadow-sm">
           <div className="bg-cyan-800 text-white px-4 py-3 flex items-center justify-between">
             <span className="font-medium">Product List</span>
             <div className="flex gap-2">
-              {/* <button className="bg-white text-cyan-800 px-4 py-2 rounded text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
+              <button className="btn-secondary flex">
                 <Upload className="w-4 h-4" />
                 Upload Excel
-              </button> */}
+              </button>
               <button
                 onClick={() => navigate('/vendors')}
                 className="btn-secondary"
@@ -128,7 +129,6 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

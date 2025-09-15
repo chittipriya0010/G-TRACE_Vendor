@@ -11,7 +11,7 @@
 
 
 .add-product {
-  @apply  text-orange-500 hover:text-orange-700 flex justify-center;
+  @apply  text-orange-500 hover:text-orange-700 flex justify-center cursor-pointer;
 }
 
 .btn-primary {
