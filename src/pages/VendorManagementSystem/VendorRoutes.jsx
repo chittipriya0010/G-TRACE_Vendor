@@ -27,8 +27,8 @@ const addProduct = async ({ vendorId, product }) => {
   return data;
 };
 
-const updateProduct = async ({ vendorId, productId, updatedProduct }) => {
-  const { data } = await api.put(`/vendors/${vendorId}/products/${productId}`, updatedProduct);
+const updateProduct = async ({ productId, updatedProduct }) => {
+  const { data } = await api.put(`/products/${productId}`, updatedProduct);
   return data;
 };
 
@@ -77,8 +77,8 @@ function VendorProvider({ children }) {
     };
 
 
-  const handleEditProduct = (vendorId, productId, updatedProduct) => {
-    updateProductMutation.mutate({ vendorId, productId, updatedProduct });
+  const handleEditProduct = ( productId, updatedProduct) => {
+    updateProductMutation.mutate({ productId, updatedProduct });
     setShowEditProductModal(false);
     setEditingProduct(null);
   };
