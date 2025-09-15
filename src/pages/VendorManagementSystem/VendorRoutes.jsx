@@ -17,12 +17,12 @@ function VendorProvider({ children }) {
       accountNo: "Amar Kapila",
       totalProducts: 6,
       products: [
-        { id: 1, name: "Cutting Blade", rate: 16, unit: "Pcs" },
-        { id: 2, name: "Wrench 14*15", rate: 50, unit: "Pcs" },
-        { id: 3, name: "Wrench 16*17", rate: 20, unit: "Pcs" },
-        { id: 4, name: "Solenoid", rate: 40, unit: "Pcs" },
-        { id: 5, name: "Iron Wire", rate: 156, unit: "Bundle" },
-        { id: 6, name: "DC Pin", rate: 200, unit: "Bundle" },
+        { id: 1, name: "Cutting Blade", rate: 16, unit: "Pcs", minOrderQty: 10 },
+        { id: 2, name: "Wrench 14*15", rate: 50, unit: "Pcs", minOrderQty: 5 },
+        { id: 3, name: "Wrench 16*17", rate: 20, unit: "Pcs", minOrderQty: 5 },
+        { id: 4, name: "Solenoid", rate: 40, unit: "Pcs", minOrderQty: 2 },
+        { id: 5, name: "Iron Wire", rate: 156, unit: "Bundle", minOrderQty: 1 },
+        { id: 6, name: "DC Pin", rate: 200, unit: "Bundle", minOrderQty: 3 },
       ],
     },
     { id: 2, name: "Pooja", phone: "9943225422", address: "...", totalProducts: 30, products: [] },
@@ -46,34 +46,34 @@ function VendorProvider({ children }) {
   };
 
   const handleAddProduct = (vendorId, productData) => {
-  const product = {
-    ...productData,
-    id: Date.now(),
-    rate: parseFloat(productData.rate),
+    const product = {
+      ...productData,
+      id: Date.now(),
+      rate: parseFloat(productData.rate),
+    };
+
+    setVendors(
+      vendors.map((vendor) =>
+        vendor.id === vendorId
+          ? { ...vendor, products: [...vendor.products, product], totalProducts: vendor.products.length + 1 }
+          : vendor
+      )
+    );
+
+    setShowAddProductModal(false);
+    setSelectedVendor(null);
   };
-
-  setVendors(
-    vendors.map((vendor) =>
-      vendor.id === vendorId
-        ? { ...vendor, products: [...vendor.products, product], totalProducts: vendor.products.length + 1 }
-        : vendor
-    )
-  );
-
-  setShowAddProductModal(false);
-  setSelectedVendor(null);
-};
 
   const handleEditProduct = (vendorId, productId, updatedProduct) => {
     setVendors(
       vendors.map((vendor) =>
         vendor.id === vendorId
           ? {
-              ...vendor,
-              products: vendor.products.map((product) =>
-                product.id === productId ? { ...product, ...updatedProduct, rate: parseFloat(updatedProduct.rate) } : product
-              ),
-            }
+            ...vendor,
+            products: vendor.products.map((product) =>
+              product.id === productId ? { ...product, ...updatedProduct, rate: parseFloat(updatedProduct.rate) } : product
+            ),
+          }
           : vendor
       )
     );

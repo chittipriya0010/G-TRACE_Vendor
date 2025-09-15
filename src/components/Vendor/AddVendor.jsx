@@ -15,7 +15,7 @@ const AddVendor = ({ handleAddVendor }) => {
       gstNo: '',
       panNo: '',
       accountNo: '',
-      products: [{ name: "", rate: "", unit: "Pcs" }],
+      products: [{ name: "", rate: "", unit: "Pcs", minOrderQty: "" }],
       gstFile: null
     }
   });
@@ -104,9 +104,10 @@ const AddVendor = ({ handleAddVendor }) => {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 font-medium">
                 <span>Product Name *</span>
-                <div className='grid grid-cols-3 gap-2 text-sm text-gray-600 font-medium'>
+                <div className='grid grid-cols-4 gap-2 text-sm text-gray-600 font-medium'>
                   <span>Rate *</span>
                   <span>Unit *</span>
+                  <span>MOQ *</span>
                   <span className='text-center'>Actions</span>
                 </div>
               </div>
@@ -118,7 +119,7 @@ const AddVendor = ({ handleAddVendor }) => {
                     placeholder="Enter product"
                     className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                   />
-                  <div className='grid grid-cols-3 gap-2 items-center'>
+                  <div className='grid grid-cols-4 gap-2 items-center'>
                     <input
                       {...register(`products.${index}.rate`, { required: "Rate required" })}
                       placeholder="₹ 100"
@@ -131,6 +132,11 @@ const AddVendor = ({ handleAddVendor }) => {
                       <option>Pcs</option>
                       <option>Bundle</option>
                     </select>
+                    <input
+                      {...register(`products.${index}.minOrderQty`, { required: "Minimum Order Quntity is required" })}
+                      placeholder="20"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    />
                     <div className="flex justify-center gap-2">
                       <button
                         type="button"

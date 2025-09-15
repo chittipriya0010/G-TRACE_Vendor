@@ -83,13 +83,13 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
 
           {/* Products Header */}
           <div className="px-4 py-3 bg-gray-100 border-b">
-            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-gray-600">
+            <div className="grid grid-cols-5 gap-4 text-sm font-medium text-gray-600">
               <div>Product Name</div>
-              {/* <div>Category</div>
-              <div>Description</div> */}
-              <div>Unit</div>
+              {/* <div>Category</div> */}
               <div>Rate per unit</div>
-              <div>Action</div>
+              <div>Unit</div>
+              <div>MOQ</div>
+              <div className='text-center'>Action</div>
             </div>
           </div>
 
@@ -101,11 +101,11 @@ const VendorDetails = ({ vendors, setShowAddProductModal, setShowEditProductModa
                   {vendor.products.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.name}</td>
-                      {/* <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td>
-                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td> */}
-                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.unit}</td>
+                      {/* <td className="px-4 py-3 text-sm text-gray-900 w-1/6">-</td> */}
                       <td className="px-4 py-3 text-sm text-gray-900 w-1/6">₹ {product.rate}</td>
-                      <td className="px-4 py-3 w-1/6">
+                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.unit}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900 w-1/6">{product.minOrderQty}</td>
+                      <td className="px-4 py-3 w-1/6 text-center">
                         <button
                           onClick={() => {
                             setSelectedVendor(vendor);
