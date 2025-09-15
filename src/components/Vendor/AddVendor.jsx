@@ -1,11 +1,9 @@
 import { SquarePlus, Trash2, Upload } from 'lucide-react';
 import { useDropzone } from "react-dropzone";
-import { useNavigate } from 'react-router-dom';
 import { useForm, useFieldArray } from "react-hook-form";
 import { useCallback } from 'react';
 
 const AddVendor = ({ handleAddVendor }) => {
-  const navigate = useNavigate();
 
   const { register, handleSubmit, control, setValue, watch , formState: { errors } } = useForm({
     defaultValues: {
@@ -44,13 +42,31 @@ const AddVendor = ({ handleAddVendor }) => {
   });
 
   const onSubmit = (data) => {
-    console.log("data", data)
-    const validProducts = data.products.filter(p => p.name && p.rate);
-    handleAddVendor({
-      ...data,
-      products: validProducts.map((p, idx) => ({ ...p, id: Date.now() + idx, rate: parseFloat(p.rate) }))
-    });
-    navigate('/vendors');
+    const validProducts = data.products.filter((p) => p.name && p.rate);
+
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("phone", data.phone);
+    formData.append("address", data.address);
+    formData.append("gstNo", data.gstNo);
+    formData.append("panNo", data.panNo);
+    formData.append("accountNo", data.accountNo);
+
+    if (data.gstFile) {
+      formData.append("gstFile", data.gstFile);
+    }
+
+    formData.append(
+      "products",
+      JSON.stringify(
+        validProducts.map((p) => ({
+          ...p,
+          rate: parseFloat(p.rate),
+        }))
+      )
+    );
+
+    handleAddVendor(formData);
   };
 
   return (
