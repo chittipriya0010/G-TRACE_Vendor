@@ -35,85 +35,96 @@ function StockProvider({ children }) {
 
   const [vendors, setVendors] = useState(sampleVendors);
   const [requests, setRequests] = useState([{
-        id: 1,
-        orderDate: "10 Jan, 2025",
-        productOrder: 4,
-        qtyTaken: 4,
-        totalAmount: 14200,
-        status: "Pending at Admin",
-        products: [
-            { name: "Steel Rod", units: 2, rate: 1500 },
-            { name: "Cement Bag", units: 2, rate: 5000 },
-        ],
-    },
-    {
-        id: 2,
-        orderDate: "11 Jan, 2025",
-        productOrder: 15,
-        qtyTaken: 15,
-        totalAmount: 16000,
-        status: "Pending at Account",
-        products: [
-            { name: "Bricks", units: 10, rate: 800 },
-            { name: "Sand", units: 5, rate: 800 },
-        ],
-    },
-    {
-        id: 3,
-        orderDate: "12 Jan, 2025",
-        productOrder: 8,
-        qtyTaken: 8,
-        totalAmount: 2000,
-        status: "Pending at Account",
-        products: [
-            { name: "Paint Bucket", units: 4, rate: 200 },
-            { name: "Brush Set", units: 4, rate: 300 },
-        ],
-    },
-    {
-        id: 4,
-        orderDate: "12 Jan, 2025",
-        productOrder: 8,
-        qtyTaken: 8,
-        totalAmount: 2000,
-        status: "Pending at Account",
-        products: [
-            { name: "Tiles", units: 8, rate: 250 },
-        ],
-    },]);
+    id: 1,
+    orderDate: "10 Jan, 2025",
+    productOrder: 4,
+    qtyTaken: 4,
+    totalAmount: 14200,
+    status: "Pending at Admin",
+    products: [
+      { name: "Steel Rod", units: 2, rate: 1500 },
+      { name: "Cement Bag", units: 2, rate: 5000 },
+    ],
+  },
+  {
+    id: 2,
+    orderDate: "11 Jan, 2025",
+    productOrder: 15,
+    qtyTaken: 15,
+    totalAmount: 16000,
+    status: "Pending at Account",
+    products: [
+      { name: "Bricks", units: 10, rate: 800 },
+      { name: "Sand", units: 5, rate: 800 },
+    ],
+  },
+  {
+    id: 3,
+    orderDate: "12 Jan, 2025",
+    productOrder: 8,
+    qtyTaken: 8,
+    totalAmount: 2000,
+    status: "Pending at Account",
+    products: [
+      { name: "Paint Bucket", units: 4, rate: 200 },
+      { name: "Brush Set", units: 4, rate: 300 },
+    ],
+  },
+  {
+    id: 4,
+    orderDate: "12 Jan, 2025",
+    productOrder: 8,
+    qtyTaken: 8,
+    totalAmount: 2000,
+    status: "Pending at Account",
+    products: [
+      { name: "Tiles", units: 8, rate: 250 },
+    ],
+  },]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState(null);
 
-  // ---- Function to add new stock request ----
   const addRequest = (requestData) => {
-    setRequests((prev) => [
-      ...prev,
-      { id: prev.length + 1, orderDate: new Date().toLocaleDateString(), ...requestData },
-    ]);
+    const newRequest = {
+      id: requests.length + 1,
+      orderDate: new Date().toLocaleDateString('en-GB', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric' 
+      }),
+      productOrder: requestData.products.length,
+      qtyTaken: requestData.products.reduce((sum, p) => sum + p.qty, 0),
+      ...requestData
+    };
+    setRequests(prev => [...prev, newRequest]);
   };
-
   return (
     <>
       {children({
         vendors,
-    setVendors,
-    requests,
-    setRequests,
-    addRequest,
-    isLoading,
-    isError,
-    selectedVendor,
-    setSelectedVendor,
+        setVendors,
+        requests,
+        setRequests,
+        addRequest,
+        isLoading,
+        isError,
       })}
     </>
   );
 }
 
-// ---- Define routes as an array ----
+
 const StockRoutes = [
   {
     index: true,
+    element: (
+      <StockProvider>
+        {({ requests }) => <RequestedStock requests={requests} />}
+      </StockProvider>
+    ),
+  },
+  {
+    path: "purchase",
     element: (
       <StockProvider>
         {({ vendors, isLoading, isError, addRequest }) => (
@@ -124,14 +135,6 @@ const StockRoutes = [
             addRequest={addRequest}
           />
         )}
-      </StockProvider>
-    ),
-  },
-  {
-    path: "requested",
-    element: (
-      <StockProvider>
-        {({ requests }) => <RequestedStock requests={requests} />}
       </StockProvider>
     ),
   },

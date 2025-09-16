@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Vendor/Sidebar";
 import Header from "../../components/Vendor/Header";
 
-const StockrManagementSystem = () => {
+const StockManagementSystem = () => {
   return (
     <div className="flex flex-col h-screen">
       {/* Fixed Header */}
@@ -26,4 +26,4 @@ const StockrManagementSystem = () => {
   );
 };
 
-export default StockrManagementSystem;
+export default StockManagementSystem;
