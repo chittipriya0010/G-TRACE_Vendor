@@ -6,6 +6,7 @@ import DisplayBilledInformation from "../../components/Sales/DisplayBilledInform
 import DetailedClient from "../../components/Sales/DetailedClient";
 import EditBill from "../../components/Sales/EditBill";
 import Dashboard from "../../components/Sales/Dashboard";
+import DeactivateAccount from "../../components/Sales/DeactivateAccount";
 
 const SalesRoutes = [
   {
@@ -80,6 +81,10 @@ const SalesRoutes = [
       </SalesProvider>
     ),
   },
+  {
+  path: "settings",
+  element: <DeactivateAccount activeStep={0} />,
+},
 ];
 
 export default SalesRoutes;

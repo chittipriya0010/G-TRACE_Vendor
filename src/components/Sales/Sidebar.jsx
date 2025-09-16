@@ -96,7 +96,9 @@ const Sidebar = ({ onLogout }) => {
 
       {/* Bottom Menu */}
       <div className="p-4 border-t border-gray-100">
-        <button className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+        <button 
+        onClick={() => navigate("/sales/settings")}
+        className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors">
           <Settings size={18} /> Setting
         </button>
         <button
