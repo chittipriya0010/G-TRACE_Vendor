@@ -1,84 +1,82 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../../../config/api";
 import VendorDetails from "../../components/Vendor/VendorDetails";
 import AddVendor from "../../components/Vendor/AddVendor";
 import VendorList from "../../components/Vendor/VendorList";
 import AddProductModal from "../../components/Vendor/AddProductModal";
 import EditProductModal from "../../components/Vendor/EditProductModal";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-
-// API calls
-const fetchVendors = async () => {
-  const { data } = await api.get("/vendors");
-  return data.data;
-};
-
-const addVendor = async (vendor) => {
-  const { data } = await api.post("/vendors", vendor, {
-    headers: { "Content-Type": "multipart/form-data" }
-  });
-  return data;
-};
-
-const addProduct = async ({ vendorId, product }) => {
-  const { data } = await api.post(`/products/${vendorId}`, product);
-  return data;
-};
-
-const updateProduct = async ({ productId, updatedProduct }) => {
-  const { data } = await api.put(`/products/${productId}`, updatedProduct);
-  return data;
-};
-
 
 function VendorProvider({ children }) {
-  
+  const [vendors, setVendors] = useState([
+    {
+      id: 1,
+      name: "Dashmesh",
+      phone: "9943225422",
+      address: "2, Nehru Ramakrishna Building, Trinity Circle, M.G Road, 560006",
+      gstNo: "29AAACCD040J2M",
+      panNo: "AAACCD040J",
+      accountNo: "Amar Kapila",
+      totalProducts: 6,
+      products: [
+        { id: 1, name: "Cutting Blade", rate: 16, unit: "Pcs", minOrderQty: 10 },
+        { id: 2, name: "Wrench 14*15", rate: 50, unit: "Pcs", minOrderQty: 5 },
+        { id: 3, name: "Wrench 16*17", rate: 20, unit: "Pcs", minOrderQty: 5 },
+        { id: 4, name: "Solenoid", rate: 40, unit: "Pcs", minOrderQty: 2 },
+        { id: 5, name: "Iron Wire", rate: 156, unit: "Bundle", minOrderQty: 1 },
+        { id: 6, name: "DC Pin", rate: 200, unit: "Bundle", minOrderQty: 3 },
+      ],
+    },
+    { id: 2, name: "Pooja", phone: "9943225422", address: "...", totalProducts: 30, products: [] },
+    { id: 3, name: "Amar", phone: "9943225422", address: "...", totalProducts: 10, products: [] },
+    { id: 4, name: "Suraj", phone: "9943225422", address: "...", totalProducts: 9, products: [] },
+    { id: 5, name: "Amar", phone: "9943225422", address: "...", totalProducts: 20, products: [] },
+  ]);
+
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [showEditProductModal, setShowEditProductModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  
-  const navigate = useNavigate();
- const queryClient = useQueryClient();
 
- // Fetch vendors
-  const { data: vendors = [], isLoading, isError } = useQuery({
-    queryKey: ["vendors"],
-    queryFn: fetchVendors,
-  });
-
-  // Mutations
-  const addVendorMutation = useMutation({
-    mutationFn: addVendor,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["vendors"] });
-    navigate('/vendors');
-    }
-  });
-
-  const addProductMutation = useMutation({
-    mutationFn: addProduct,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendors"] })
-  });
-
-  const updateProductMutation = useMutation({
-    mutationFn: updateProduct,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendors"] }),
-  });
-  // Handlers
-  const handleAddVendor = (vendor) => addVendorMutation.mutate(vendor);
+  const handleAddVendor = (newVendor) => {
+    const vendor = {
+      ...newVendor,
+      id: vendors.length + 1,
+      totalProducts: newVendor.products.length,
+    };
+    setVendors([...vendors, vendor]);
+  };
 
   const handleAddProduct = (vendorId, productData) => {
-    addProductMutation.mutate({ vendorId, product: productData });
-    setShowAddProductModal(false);
-    setSelectedVendor(null);
+    const product = {
+      ...productData,
+      id: Date.now(),
+      rate: parseFloat(productData.rate),
     };
 
+    setVendors(
+      vendors.map((vendor) =>
+        vendor.id === vendorId
+          ? { ...vendor, products: [...vendor.products, product], totalProducts: vendor.products.length + 1 }
+          : vendor
+      )
+    );
 
-  const handleEditProduct = ( productId, updatedProduct) => {
-    updateProductMutation.mutate({ productId, updatedProduct });
+    setShowAddProductModal(false);
+    setSelectedVendor(null);
+  };
+
+  const handleEditProduct = (vendorId, productId, updatedProduct) => {
+    setVendors(
+      vendors.map((vendor) =>
+        vendor.id === vendorId
+          ? {
+            ...vendor,
+            products: vendor.products.map((product) =>
+              product.id === productId ? { ...product, ...updatedProduct, rate: parseFloat(updatedProduct.rate) } : product
+            ),
+          }
+          : vendor
+      )
+    );
     setShowEditProductModal(false);
     setEditingProduct(null);
   };
@@ -87,12 +85,6 @@ function VendorProvider({ children }) {
     <>
       {children({
         vendors,
-        isLoading,
-        isError,
-        selectedVendor,
-        showAddProductModal,
-        showEditProductModal,
-        editingProduct,
         setSelectedVendor,
         setShowAddProductModal,
         setShowEditProductModal,
@@ -100,10 +92,14 @@ function VendorProvider({ children }) {
         handleAddVendor,
         handleAddProduct,
         handleEditProduct,
+        selectedVendor,
+        showAddProductModal,
+        showEditProductModal,
+        editingProduct,
       })}
 
       {/* Mount Add Product Modal */}
-      {showAddProductModal && selectedVendor && (
+      {showAddProductModal && (
         <AddProductModal
           handleAddProduct={handleAddProduct}
           selectedVendor={selectedVendor}
@@ -113,7 +109,7 @@ function VendorProvider({ children }) {
       )}
 
       {/* Mount Edit Product Modal */}
-      {showEditProductModal && editingProduct && selectedVendor && (
+      {showEditProductModal && editingProduct && (
         <EditProductModal
           editingProduct={editingProduct}
           setEditingProduct={setEditingProduct}
@@ -132,11 +128,9 @@ const VendorRoutes = [
     index: true,
     element: (
       <VendorProvider>
-        {({ vendors, setSelectedVendor, setShowAddProductModal, isLoading, isError }) => (
+        {({ vendors, setSelectedVendor, setShowAddProductModal }) => (
           <VendorList
             vendors={vendors}
-            isLoading={isLoading}
-            isError={isError}
             setSelectedVendor={setSelectedVendor}
             setShowAddProductModal={setShowAddProductModal}
           />
