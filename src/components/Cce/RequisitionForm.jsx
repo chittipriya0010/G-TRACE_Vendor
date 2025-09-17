@@ -63,7 +63,7 @@ export default function RequisitionForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow p-6">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
         {/* Top header with title, team, date */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-800">Requisition Form</h1>

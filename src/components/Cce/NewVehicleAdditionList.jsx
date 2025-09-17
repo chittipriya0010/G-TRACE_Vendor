@@ -64,25 +64,17 @@ const NewDeviceAdditionList = () => {
       </h1>
 
       {/* Table Container */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <div className="flex items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium mr-3">
-            Select All
-          </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium">
-            Export Data
-          </button>
-        </div>
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
+              <tr className="bg-gray-100 border-gray-200">
                 <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
-                  <input
+                  {/* <input
                     type="checkbox"
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                  />
+                  /> */}
                 </th>
                 <th className="px-6 py-4 text-left font-semibold text-gray-700">
                   Date
@@ -117,20 +109,20 @@ const NewDeviceAdditionList = () => {
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="px-6 py-4">
-                    <input
+                    {/* <input
                       type="checkbox"
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                    />
+                    /> */}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{row.date}</td>
-                  <td className="px-6 py-4 text-gray-800 font-medium">
+                  <td className="px-4 py-4 text-gray-700">{row.date}</td>
+                  <td className="px-4 py-4 text-gray-800 font-medium">
                     {row.clientName}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{row.company}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.vehicleNo}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.imei}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.deviceType}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4 text-gray-700">{row.company}</td>
+                  <td className="px-4 py-4 text-gray-700">{row.vehicleNo}</td>
+                  <td className="px-4 py-4 text-gray-700">{row.imei}</td>
+                  <td className="px-4 py-4 text-gray-700">{row.deviceType}</td>
+                  <td className="px-4 py-4">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
                         row.billing === "Yes"

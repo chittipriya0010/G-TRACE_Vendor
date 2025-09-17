@@ -46,47 +46,39 @@ const DeleteList = () => {
       </h1>
 
       {/* Table Container */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <div className="flex items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium mr-3">
-            Select All
-          </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium">
-            Export Data
-          </button>
-        </div>
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed text-sm border-collapse">
+        <div className="">
+          <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
+              <tr className="bg-gray-100 border-gray-200">
                 <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
-                  <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
+                  {/* <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" /> */}
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Date</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Username</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Vehicle No</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Device IMEI</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Device Sim</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Current Location</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Device Status</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Reason</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">View Details</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Date</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Username</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Vehicle No</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device IMEI</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device Sim</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Current Location</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device Status</th>
+                <th className="px-1 py-4 text-left font-semibold text-gray-700">Reason</th>
+                <th className="pr-1 py-4 text-left font-semibold text-gray-700">View Details</th>
               </tr>
             </thead>
             <tbody className="bg-white">
               {rows.map((row, idx) => (
                 <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
+                  <td className="px-1 py-4">
+                    {/* <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" /> */}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{row.date}</td>
-                  <td className="px-6 py-4 text-gray-800 font-medium">{row.username}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.vehicleNo}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.imei}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.sim}</td>
-                  <td className="px-6 py-4 text-gray-700">{row.location}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-1 py-4 text-gray-700">{row.date}</td>
+                  <td className="px-1 py-4 text-gray-800 font-medium">{row.username}</td>
+                  <td className="px-1 py-4 text-gray-700">{row.vehicleNo}</td>
+                  <td className="px-1 py-4 text-gray-700">{row.imei}</td>
+                  <td className="px-1 py-4 text-gray-700">{row.sim}</td>
+                  <td className="px-1 py-4 text-gray-700">{row.location}</td>
+                  <td className="px-1 py-4">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
                         row.statusType === "error"
@@ -98,7 +90,7 @@ const DeleteList = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-700">{row.reason}</td>
-                  <td className="px-6 py-4">
+                  <td className="pr-10 py-4">
                     <button
                       className="text-blue-600 font-medium hover:underline text-sm"
                       onClick={() => handleViewDetails(row)}

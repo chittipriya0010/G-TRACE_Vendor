@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   FileText,
@@ -10,14 +10,12 @@ import {
   Plus,
 } from "lucide-react";
 import logo from "../../images/logo.png";
-import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ onLogout }) => {
-  const location = useLocation(); // get current location
+  const location = useLocation();
   const [activeItem, setActiveItem] = useState("Dashboard");
   const navigate = useNavigate();
 
-  // Show "View Existing" only on specific routes (edit-bill and detailed-client)
   const showViewExisting = [
     "/sales/edit-bill",
     "/sales/detailed-client",
@@ -32,9 +30,6 @@ const Sidebar = ({ onLogout }) => {
   ];
 
   const handleLogout = () => {
-    // Perform any logout logic here e.g. clear auth tokens, reset user state etc.
-
-    // Redirect user to /login
     navigate("/login");
   };
 
@@ -43,31 +38,34 @@ const Sidebar = ({ onLogout }) => {
   };
 
   return (
-    <div className="flex flex-col justify-between min-h-screen w-[180px] max-w-full border-r border-gray-200 bg-white font-poppins">
+    <div className="flex flex-col justify-between min-h-screen w-[220px] bg-white font-Poppins border-r border-gray-100">
       <div>
-        {/* Logo Section */}
-        <div className="flex items-center justify-center p-6">
+        {/* Logo Section with strong border and spacing */}
+        <div className="flex items-center justify-center pt-3 pb-4 border-b border-gray-100 bg-white">
           <img
             src={logo}
             alt="Logo"
-            className="w-[82px] h-[82px] rounded-lg object-contain mr-2"
+            className="w-[90px] h-auto object-contain"
+            style={{ marginBottom: "-8px" }}
           />
         </div>
 
-        {/* Add New Button always */}
-        <div className="px-4 mb-6">
-          <button 
-          onClick={handleAddNewClick}
-          className="w-full flex items-center justify-center gap-1 bg-orange-500 text-white font-medium text-sm px-4 py-2.5 rounded-lg shadow-md hover:bg-orange-600 transition-colors">
+        {/* Add New Button */}
+        <div className="px-4 mt-6 mb-8">
+          <button
+            onClick={handleAddNewClick}
+            className="w-full flex font-Poppins items-center justify-center gap-1 bg-orange-500 text-white font-semibold text-base px-4 py-2.5 rounded-md hover:bg-orange-600 transition"
+            style={{ letterSpacing: "0.01em" }}
+          >
             Add New <Plus size={16} />
           </button>
         </div>
 
-        {/* Conditional menu */}
+        {/* Main Menu */}
         {showViewExisting ? (
           <nav className="space-y-1 px-4 mb-6">
-            <div className="text-gray-500 text-xs font-medium mb-2">View Existing</div>
-            <a href="#" className="block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded text-sm">
+            <div className="text-gray-500 text-xs font-medium mb-2 font-Poppins">View Existing</div>
+            <a href="#" className="block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded text-sm font-Poppins">
               Pending
             </a>
             <a href="#" className="block text-blue-600 bg-blue-50 px-3 py-2 rounded text-sm font-medium">
@@ -80,10 +78,10 @@ const Sidebar = ({ onLogout }) => {
               <button
                 key={item.name}
                 onClick={() => setActiveItem(item.name)}
-                className={`flex items-center gap-3 w-full px-4 py-2.5 mb-1 rounded-lg text-left transition-all ${
+                className={`flex items-center gap-3 w-full px-4 py-2.5 mb-1 rounded-lg text-left transition-all font-Poppins text-base ${
                   activeItem === item.name
-                    ? "bg-blue-600 text-white font-semibold"
-                    : "text-gray-600 font-medium hover:bg-gray-50"
+                    ? "bg-blue-100 text-blue-700 font-bold"
+                    : "text-gray-700 font-medium hover:bg-gray-50"
                 }`}
               >
                 {item.icon}
@@ -96,14 +94,15 @@ const Sidebar = ({ onLogout }) => {
 
       {/* Bottom Menu */}
       <div className="p-4 border-t border-gray-100">
-        <button 
-        onClick={() => navigate("/sales/settings")}
-        className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+        <button
+          onClick={() => navigate("/sales/settings")}
+          className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+        >
           <Settings size={18} /> Setting
         </button>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-3 w-full px-4 py-2.5 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
         >
           <LogOut size={18} /> Logout
         </button>

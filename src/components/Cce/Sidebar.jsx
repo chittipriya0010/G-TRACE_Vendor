@@ -38,24 +38,26 @@ const Sidebar = ({ onLogout }) => {
   };
 
   return (
-    <div className="flex flex-col justify-between min-h-screen max-w-full border-r border-gray-200 bg-white font-poppins text-sm">
+    <div className="flex flex-col justify-between min-h-screen w-[220px] bg-white font-Poppins border-r border-gray-100">
       <div>
         {/* Logo Section */}
-        <div className="flex items-center justify-center p-6">
+        <div className="flex items-center justify-center pt-3 pb-4 border-b border-gray-100 bg-white">
           <img
             src={logo}
             alt="Logo"
-            className="w-[70px] h-[70px] rounded-lg object-contain mr-2"
+            className="w-[90px] h-auto object-contain"
+            style={{ marginBottom: "-8px" }}
           />
         </div>
 
         {/* Add New Button */}
-        <div className="px-4 mb-6">
+        <div className="px-4 mt-6 mb-8">
           <button
             onClick={handleAddNewClick}
-            className="w-full flex items-center justify-center gap-1 bg-orange-500 text-white font-medium text-xs px-4 py-2 rounded-lg shadow-md hover:bg-orange-600 transition-colors"
+            className="w-full flex font-Poppins items-center justify-center gap-1 bg-orange-500 text-white font-semibold text-base px-4 py-2.5 rounded-md hover:bg-orange-600 transition"
+            style={{ letterSpacing: "0.01em" }}
           >
-            Add New <Plus size={14} />
+            Add New <Plus size={16} />
           </button>
         </div>
 

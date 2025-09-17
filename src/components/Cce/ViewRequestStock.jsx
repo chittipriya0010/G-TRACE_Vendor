@@ -91,23 +91,15 @@ const ViewStockRequest = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-2 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">View Stock Request</h1>
 
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <div className="flex items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium mr-3">
-            Select All
-          </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm hover:bg-gray-100 font-medium">
-            Received All
-          </button>
-        </div>
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
         
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
+              <tr className="bg-gray-100 border-gray-200">
                 <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
                   <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                 </th>

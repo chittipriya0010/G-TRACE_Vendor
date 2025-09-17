@@ -17,12 +17,13 @@ const PopupWrapper = ({ title, onClose, children, titleStyle = "", isMailPopup =
     <div
       className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 ${
         isMailPopup 
-          ? "w-[90vw] max-w-[600px] max-h-[90vh] overflow-y-auto" 
-          : "w-[500px] max-w-[90vw]"
+          ? "w-[80vw] max-w-[700px] max-h-[85vh] overflow-y-auto" 
+          : "w-[450px] max-w-[85vw]"
       }`}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex justify-between items-center border-b px-4 py-3 sticky top-0 bg-white z-10">
+      {/* Header with brown border */}
+      <div className="flex justify-center items-center border-b-brown-600 px-4 py-3 sticky top-0 bg-white z-10">
         <h2 className={`text-lg font-medium text-gray-800 ${titleStyle}`}>{title}</h2>
         <button
           className="text-gray-400 hover:text-gray-600 rounded-full p-1"
@@ -32,6 +33,8 @@ const PopupWrapper = ({ title, onClose, children, titleStyle = "", isMailPopup =
           <X size={20} />
         </button>
       </div>
+
+      {/* Body */}
       <div className="p-6">{children}</div>
     </div>
   </>
@@ -234,7 +237,7 @@ const Header = ({ userEmail = "karan aujla", showViewExisting = false }) => {
   };
 
   return (
-    <header className="sticky top-0 z-10 w-full bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between relative">
+    <header className="sticky top-0 z-10 w-full bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between relative">
       {showViewExisting ? (
         <h1 className="font-poppins text-lg font-semibold">
           Welcome Back, Hi Amit 👋
@@ -248,7 +251,7 @@ const Header = ({ userEmail = "karan aujla", showViewExisting = false }) => {
           <input
             type="text"
             placeholder="Search for invoice clients.."
-            className="font-[Poppins] w-full border border-gray-200 rounded-lg text-sm pl-10 pr-4 py-2.5 outline-none transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+            className="font-Poppins w-full border-gray-200 rounded-lg text-sm pl-10 pr-4 py-2.5 outline-none transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
       )}
@@ -291,46 +294,47 @@ const Header = ({ userEmail = "karan aujla", showViewExisting = false }) => {
         />
       </div>
 
-      {/* Message Popup - Redesigned to match the image */}
+      {/* Message Popup - Styled to match the first image exactly */}
       {showMessagePopup && (
         <PopupWrapper
           title="Send SMS"
+          titleStyle="border-b border-orange-300 pb-1"
           onClose={() => setShowMessagePopup(false)}
         >
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mobile Numbers *
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mobile Numbers
               </label>
               <input
                 type="text"
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                 placeholder=""
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Message *
               </label>
               <textarea
                 rows={4}
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-gray-50"
                 placeholder=""
               />
             </div>
-            <div className="flex justify-center gap-3 pt-4">
+            <div className="flex justify-center gap-3 pt-3">
               <button
-                className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="px-6 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition-colors"
                 onClick={handleSendText}
               >
                 Submit
               </button>
               <button
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50 transition-colors bg-white"
                 onClick={() => setShowMessagePopup(false)}
               >
                 Cancel
@@ -469,7 +473,7 @@ const Header = ({ userEmail = "karan aujla", showViewExisting = false }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CC
+                  CC *
                 </label>
                 <input 
                   type="text" 
