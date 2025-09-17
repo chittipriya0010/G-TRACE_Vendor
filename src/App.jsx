@@ -5,6 +5,9 @@ import SalesLogin from "./components/Sales/SalesLogin";
 import ErrorPage from "./pages/ErrorPage";
 import SalesRoutes from "./pages/SalesManagementSystem/SalesRoutes";
 import SalesManagementSystem from "./pages/SalesManagementSystem/SalesManagementSystem";
+import CceManagementSystem from "./pages/CceManagementSystem/CceManagementSystem";
+import CceRoutes from "./pages/CceManagementSystem/CceRoutes";
+import CceLogin from "./components/Cce/CceLogin";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +26,17 @@ function App() {
     {
       path: "/login",
       element: <SalesLogin />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/cce-login",
+      element: <CceLogin />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/cce",
+      element: <CceManagementSystem />,
+      children: CceRoutes,
       errorElement: <ErrorPage />,
     },
   ]);
