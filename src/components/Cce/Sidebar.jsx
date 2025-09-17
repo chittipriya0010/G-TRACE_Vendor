@@ -39,7 +39,7 @@ const Sidebar = ({ onLogout }) => {
   };
 
   return (
-    <div className="flex flex-col justify-between min-h-screen w-[220px] bg-white font-Poppins border-r border-gray-100">
+    <div className="fix flex-col justify-between min-h-screen w-[220px] bg-white font-Poppins border-r border-gray-100">
       <div>
         {/* Logo Section */}
         <div className="flex items-center justify-center pt-3 pb-4 border-b border-gray-100 bg-white">

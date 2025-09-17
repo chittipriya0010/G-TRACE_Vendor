@@ -104,31 +104,31 @@ const NotWorkingVehicle = () => {
         <table className="w-full text-sm border-collapse">
           <thead>
   <tr className="border-gray-200">
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Vehicle Reg No.
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       IMEI
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Last Service Date
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Last Contact Time
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Last Service Reason
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Networking Days
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Lat Long
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Temperature
     </th>
-    <th className="px-4 py-3 text-left font-semibold text-gray-400">
+    <th className="px-2 py-3 text-left font-semibold text-gray-400">
       Add Service
     </th>
   </tr>
@@ -139,13 +139,13 @@ const NotWorkingVehicle = () => {
                 key={idx}
                 className="border-b border-gray-100 hover:bg-gray-50 text-gray-700"
               >
-                <td className="px-3 py-3">{row.vehicleNo}</td>
-                <td className="px-3 py-3">{row.imei}</td>
-                <td className="px-3 py-3">{row.lastServiceDate}</td>
-                <td className="px-3 py-3">{row.lastContactTime}</td>
-                <td className="px-3 py-3">{row.lastServiceReason}</td>
-                <td className="px-3 py-3">{row.networkingDays}</td>
-                <td className="px-3 py-3 text-blue-600 underline cursor-pointer">
+                <td className="px-1 py-3">{row.vehicleNo}</td>
+                <td className="px-1 py-3">{row.imei}</td>
+                <td className="px-1 py-3">{row.lastServiceDate}</td>
+                <td className="px-1 py-3">{row.lastContactTime}</td>
+                <td className="px-1 py-3">{row.lastServiceReason}</td>
+                <td className="px-1 py-3">{row.networkingDays}</td>
+                <td className="px-1 py-3 text-blue-600 underline cursor-pointer">
                   {row.latLong}
                 </td>
                 <td className="px-3 py-3">{row.temp}°</td>

@@ -161,11 +161,11 @@ const [editData, setEditData] = useState(null); // for Edit small popup
                   <td className="px-6 py-4 text-gray-800 font-medium">
                     {job.client}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{job.vehicles}</td>
-                  <td className="px-6 py-4 text-gray-700">{job.location}</td>
-                  <td className="px-6 py-4 text-gray-700">{job.device}</td>
-                  <td className="px-6 py-4 text-gray-700">{job.time}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-2 py-4 text-gray-700">{job.vehicles}</td>
+                  <td className="px-2 py-4 text-gray-700">{job.location}</td>
+                  <td className="px-2 py-4 text-gray-700">{job.device}</td>
+                  <td className="px-2 py-4 text-gray-700">{job.time}</td>
+                  <td className="px-2 py-4">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
                         job.statusType === "success"

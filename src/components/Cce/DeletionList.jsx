@@ -117,7 +117,7 @@ const DeleteList = () => {
           {/* Modal */}
           <div className="bg-white rounded-lg shadow-xl z-50 w-full max-w-lg max-h-[90vh] overflow-y-auto relative">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+            <div className="flex items-center justify-between px-4 py-3">
               <h2 className="text-lg font-semibold text-gray-800">Delete Vehicle</h2>
               <button
                 className="text-gray-400 hover:text-gray-600"
@@ -136,7 +136,7 @@ const DeleteList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Client User Name <span className="text-red-500">*</span>
                   </label>
-                  <select className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                  <select className="w-full rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                     <option>Select One</option>
                     <option selected>{selectedRow.username}</option>
                   </select>
