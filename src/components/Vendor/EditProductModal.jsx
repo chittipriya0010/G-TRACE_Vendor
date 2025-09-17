@@ -24,7 +24,7 @@ const EditProductModal = ({ editingProduct, handleEditProduct, selectedVendor, s
   }, [editingProduct, reset]);
 
   const onSubmit = (data) => {
-    handleEditProduct(selectedVendor.id, editingProduct.id, data);
+    handleEditProduct(editingProduct.id, data);
     setShowEditProductModal(false);
     setEditingProduct(null);
   };

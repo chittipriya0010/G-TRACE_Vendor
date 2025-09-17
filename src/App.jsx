@@ -8,6 +8,8 @@ import SalesManagementSystem from "./pages/SalesManagementSystem/SalesManagement
 import CceManagementSystem from "./pages/CceManagementSystem/CceManagementSystem";
 import CceRoutes from "./pages/CceManagementSystem/CceRoutes";
 import CceLogin from "./components/Cce/CceLogin";
+import StockrManagementSystem from "./pages/StockManagementSystem/StockManagementSystem";
+import StockRoutes from "./pages/StockManagementSystem/StockRoutes";
 
 function App() {
   const router = createBrowserRouter([
@@ -38,6 +40,12 @@ function App() {
       element: <CceManagementSystem />,
       children: CceRoutes,
       errorElement: <ErrorPage />,
+    },
+     {
+      path: "/stocks",
+      element: <StockrManagementSystem />,
+      errorElement: <ErrorPage />,
+      children: StockRoutes,
     },
   ]);
 
