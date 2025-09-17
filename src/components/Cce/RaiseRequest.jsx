@@ -67,7 +67,7 @@ export default function RaiseRequestForm() {
         </h1>
 
         {/* Job Type Tabs */}
-        <div className="flex border-b border-gray-200 mb-6">
+        <div className="flex border-gray-200 mb-6">
           {['Installation', 'Removal', 'Service'].map((type) => (
             <button
               key={type}
