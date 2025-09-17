@@ -71,28 +71,28 @@ const NewDeviceAdditionList = () => {
           <table className="w-full text-sm border-collapse">
   <thead>
     <tr className="border-gray-200">
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Date
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Client Name
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Company Name
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Vehicle No
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Device IMEI
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Device Type
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         Billing
       </th>
-      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
         View Details
       </th>
     </tr>
