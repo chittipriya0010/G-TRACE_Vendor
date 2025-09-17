@@ -16,6 +16,7 @@ const Sidebar = ({ onLogout }) => {
 
   const menuItems = [
     { name: "Request Stock", icon: <FileText size={16} />, route: "/request-stock" },
+    { name: "Not Working", icon: <FileText size={16} />, route: "/cce/not-working" },
     { name: "View Request Stock", icon: <FileText size={16} />, route: "/cce/view-request-stock" },
     { name: "Raise Request (Job)", icon: <Plus size={16} />, route: "/cce/request-job" },
     { name: "View Job Status", icon: <FilePieChart size={16} />, route: "/cce/view-job" },

@@ -40,6 +40,7 @@ const DeleteList = () => {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
+      <div className="bg-white rounded-lg shadow-md p-4">
       {/* Header */}
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">
         Deletion List
@@ -50,58 +51,57 @@ const DeleteList = () => {
         
         <div className="">
           <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-gray-100 border-gray-200">
-                <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
-                  {/* <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" /> */}
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Date</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Username</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Vehicle No</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device IMEI</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device Sim</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Current Location</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Device Status</th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">Reason</th>
-                <th className="pr-1 py-4 text-left font-semibold text-gray-700">View Details</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {rows.map((row, idx) => (
-                <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-1 py-4">
-                    {/* <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" /> */}
-                  </td>
-                  <td className="px-1 py-4 text-gray-700">{row.date}</td>
-                  <td className="px-1 py-4 text-gray-800 font-medium">{row.username}</td>
-                  <td className="px-1 py-4 text-gray-700">{row.vehicleNo}</td>
-                  <td className="px-1 py-4 text-gray-700">{row.imei}</td>
-                  <td className="px-1 py-4 text-gray-700">{row.sim}</td>
-                  <td className="px-1 py-4 text-gray-700">{row.location}</td>
-                  <td className="px-1 py-4">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
-                        row.statusType === "error"
-                          ? "bg-red-50 text-red-700 border-red-200"
-                          : "bg-green-50 text-green-700 border-green-200"
-                      }`}
-                    >
-                      {row.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">{row.reason}</td>
-                  <td className="pr-10 py-4">
-                    <button
-                      className="text-blue-600 font-medium hover:underline text-sm"
-                      onClick={() => handleViewDetails(row)}
-                    >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr className="border-gray-200">
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Date</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Username</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Vehicle No</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device IMEI</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device Sim</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Current Location</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device Status</th>
+      <th className="px-1 py-4 text-center font-semibold text-gray-400">Reason</th>
+      <th className="pr-1 py-4 text-center font-semibold text-gray-400">View Details</th>
+    </tr>
+  </thead>
+  <tbody className="bg-white">
+    {rows.map((row, idx) => (
+      <tr
+        key={idx}
+        className="border-b border-gray-100 hover:bg-gray-50"
+      >
+        <td className="px-1 py-4 text-gray-700 text-center">{row.date}</td>
+        <td className="px-1 py-4 text-gray-800 font-medium text-center">
+          {row.username}
+        </td>
+        <td className="px-1 py-4 text-gray-700 text-center">{row.vehicleNo}</td>
+        <td className="px-1 py-4 text-gray-700 text-center">{row.imei}</td>
+        <td className="px-1 py-4 text-gray-700 text-center">{row.sim}</td>
+        <td className="px-1 py-4 text-gray-700 text-center">{row.location}</td>
+        <td className="px-1 py-4">
+          <span
+            className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
+              row.statusType === "error"
+                ? "bg-red-50 text-red-700 border-red-200"
+                : "bg-green-50 text-green-700 border-green-200"
+            }`}
+          >
+            {row.status}
+          </span>
+        </td>
+        <td className="px-6 py-4 text-gray-700">{row.reason}</td>
+        <td className="pr-10 py-4">
+          <button
+            className="text-blue-600 font-medium hover:underline text-sm"
+            onClick={() => handleViewDetails(row)}
+          >
+            View Details
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
         </div>
       </div>
 
@@ -334,6 +334,7 @@ const DeleteList = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

@@ -93,24 +93,25 @@ const ViewStockRequest = () => {
   return (
     <div className="p-2 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">View Stock Request</h1>
+      <div className="bg-white rounded-lg shadow-md p-4">
 
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
         
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-gray-200">
+              <tr className="border-gray-200">
                 <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
                   <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Product Name</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Qty</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Client</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Required By</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Location</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Product Description/Qty</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">Action</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Product Name</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Qty</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Client</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Required By</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Location</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Status</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Product Description/Qty</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-400">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -181,6 +182,7 @@ const ViewStockRequest = () => {
           </table>
         </div>
       </div>
+    </div>
     </div>
   );
 };

@@ -83,11 +83,12 @@ const [editData, setEditData] = useState(null); // for Edit small popup
 
   return (
     <div className="p-2 bg-gray-50 min-h-screen">
-      {/* Header */}
-      <h1 className="text-2xl font-semibold text-gray-800 mb-2">View Job</h1>
+  <div className="bg-white rounded-lg shadow-md p-4">
+    {/* Header + Tabs in one row */}
+    <div className="flex items-center justify-between mb-4">
+      <h1 className="text-2xl font-semibold text-gray-800">View Job</h1>
 
-      {/* Tabs */}
-      <div className="flex space-x-2 mb-2">
+      <div className="flex space-x-2">
         {["Installation", "Service", "Removal"].map((tab) => (
           <button
             key={tab}
@@ -102,44 +103,45 @@ const [editData, setEditData] = useState(null); // for Edit small popup
           </button>
         ))}
       </div>
+    </div>
 
       {/* Table Container */}
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-gray-200">
+              <tr className="border-gray-200">
                 <th className="px-2 py-2 text-left font-semibold text-gray-700 w-8">
                   {/* <input
                     type="checkbox"
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded"
                   /> */}
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Client Name
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   No. of Vehicle
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Location
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Device Model
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Available Time
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Status
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   View Details
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Edit
                 </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-700">
+                <th className="px-1 py-4 text-left font-semibold text-gray-400">
                   Action
                 </th>
               </tr>
@@ -475,6 +477,7 @@ const [editData, setEditData] = useState(null); // for Edit small popup
     </div>
   </div>
 )}
+    </div>
     </div>
   );
 };

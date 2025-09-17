@@ -58,6 +58,7 @@ const NewDeviceAdditionList = () => {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
+      <div className="bg-white rounded-lg shadow-md p-4">
       {/* Header */}
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">
         New Device Addition List
@@ -68,83 +69,71 @@ const NewDeviceAdditionList = () => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-gray-100 border-gray-200">
-                <th className="px-6 py-4 text-left font-semibold text-gray-700 w-8">
-                  {/* <input
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                  /> */}
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Date
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Client Name
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Company Name
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Vehicle No
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Device IMEI
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Device Type
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  Billing
-                </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
-                  View Details
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {rows.map((row, idx) => (
-                <tr
-                  key={idx}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4">
-                    {/* <input
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                    /> */}
-                  </td>
-                  <td className="px-4 py-4 text-gray-700">{row.date}</td>
-                  <td className="px-4 py-4 text-gray-800 font-medium">
-                    {row.clientName}
-                  </td>
-                  <td className="px-4 py-4 text-gray-700">{row.company}</td>
-                  <td className="px-4 py-4 text-gray-700">{row.vehicleNo}</td>
-                  <td className="px-4 py-4 text-gray-700">{row.imei}</td>
-                  <td className="px-4 py-4 text-gray-700">{row.deviceType}</td>
-                  <td className="px-4 py-4">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
-                        row.billing === "Yes"
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-red-50 text-red-700 border-red-200"
-                      }`}
-                    >
-                      {row.billing}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-blue-600 font-medium hover:underline text-sm"
-                      onClick={() => handleViewDetails(row)}
-                    >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr className="border-gray-200">
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Date
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Client Name
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Company Name
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Vehicle No
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Device IMEI
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Device Type
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        Billing
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-700">
+        View Details
+      </th>
+    </tr>
+  </thead>
+  <tbody className="bg-white">
+    {rows.map((row, idx) => (
+      <tr
+        key={idx}
+        className="border-b border-gray-100 hover:bg-gray-50"
+      >
+        <td className="px-4 py-4 text-gray-700">{row.date}</td>
+        <td className="px-4 py-4 text-gray-800 font-medium">
+          {row.clientName}
+        </td>
+        <td className="px-4 py-4 text-gray-700">{row.company}</td>
+        <td className="px-4 py-4 text-gray-700">{row.vehicleNo}</td>
+        <td className="px-4 py-4 text-gray-700">{row.imei}</td>
+        <td className="px-4 py-4 text-gray-700">{row.deviceType}</td>
+        <td className="px-4 py-4">
+          <span
+            className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
+              row.billing === "Yes"
+                ? "bg-green-50 text-green-700 border-green-200"
+                : "bg-red-50 text-red-700 border-red-200"
+            }`}
+          >
+            {row.billing}
+          </span>
+        </td>
+        <td className="px-4 py-4">
+          <button
+            className="text-blue-600 font-medium hover:underline text-sm"
+            onClick={() => handleViewDetails(row)}
+          >
+            View Details
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
         </div>
       </div>
 
@@ -280,6 +269,7 @@ const NewDeviceAdditionList = () => {
           </form>
         </div>
       )}
+    </div>
     </div>
   );
 };
