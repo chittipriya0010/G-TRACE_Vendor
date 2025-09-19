@@ -8,13 +8,34 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    console.log("Login attempt:", { email, password, rememberMe });
-    // Perform authentication here (mock or real)
-    // On success:
-    navigate("/sales");
+    console.log("Login attempt:", { email, password, rememberMe, role });
+
+    // TODO: Replace with actual authentication + role fetch
+    if (!role) {
+      alert("⚠ Please select a role before logging in!");
+      return;
+    }
+
+    switch (role) {
+      case "cce":
+        navigate("/cce/not-working");
+        break;
+      case "sales":
+        navigate("/sales");
+        break;
+      case "stocks":
+        navigate("/stocks");
+        break;
+      case "vendors":
+        navigate("/vendors");
+        break;
+      default:
+        alert("Invalid role");
+    }
   };
 
   return (
@@ -70,6 +91,24 @@ const LoginPage = () => {
                 {showPassword ? "🙈" : "👁"}
               </button>
             </div>
+          </div>
+
+          {/* Role Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Role
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full py-3 px-4 border border-gray-300 rounded-xl text-sm bg-white outline-none focus:border-blue-500 transition"
+            >
+              <option value="">-- Select Role --</option>
+              <option value="cce">CCE</option>
+              <option value="sales">Sales</option>
+              <option value="stocks">Stocks</option>
+              <option value="vendors">Vendors</option>
+            </select>
           </div>
 
           {/* Remember Me & Forgot Password */}

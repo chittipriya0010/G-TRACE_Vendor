@@ -1,36 +1,39 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  FileText,
-  FilePieChart,
-  Plus,
+  ChevronRight,
+  ChevronLeft,
+  FileBadge,
   Settings,
   LogOut,
+  LayoutDashboard,
+  List,
+  FolderOpenDot,
+  FileBarChart,
+  SquareMinus,
+  SquarePlus,
+  ClipboardList
 } from "lucide-react";
-import logo from "../../images/logo.png";
 
 const Sidebar = ({ onLogout }) => {
   const location = useLocation();
-  const [activeItem, setActiveItem] = useState("Request Stock");
+  const [activeItem, setActiveItem] = useState("Dashboard");
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Request Stock", icon: <FileText size={16} />, route: "/request-stock" },
-    { name: "Not Working", icon: <FileText size={16} />, route: "/cce/not-working" },
-    { name: "View Request Stock", icon: <FileText size={16} />, route: "/cce/view-request-stock" },
-    { name: "Raise Request (Job)", icon: <Plus size={16} />, route: "/cce/request-job" },
-    { name: "View Job Status", icon: <FilePieChart size={16} />, route: "/cce/view-job" },
-    { name: "Deletion List", icon: <FileText size={16} />, route: "/cce/deletion-list" },
-    { name: "Addition List", icon: <FileText size={16} />, route: "/cce/new-addition" },
-    { name: "Requisition Form", icon: <Plus size={16} />, route: "/cce/requisition-form" },
+    { name: "Dashboard", icon: <LayoutDashboard size={20} />, route: "/dashboard" },
+    { name: "Request Stock", icon: <FileBadge size={20} />, route: "/request-stock" },
+    { name: "View Request Stock", icon: <List size={20} />, route: "/cce/view-request-stock" },
+    { name: "Raise Request (Job)", icon: <FolderOpenDot size={20} />, route: "/cce/request-job" },
+    { name: "View Job Status", icon: <FileBarChart size={20} />, route: "/cce/view-job" },
+    { name: "Deletion List", icon: <SquareMinus size={20} />, route: "/cce/deletion-list" },
+    { name: "Addition List", icon: <SquarePlus size={20} />, route: "/cce/new-addition" },
+    { name: "Requisition Form", icon: <ClipboardList size={20} />, route: "/cce/requisition-form" },
   ];
 
   const handleLogout = () => {
     navigate("/login");
-  };
-
-  const handleAddNewClick = () => {
-    navigate("/sales/new-account");
   };
 
   const handleMenuItemClick = (item) => {
@@ -39,64 +42,56 @@ const Sidebar = ({ onLogout }) => {
   };
 
   return (
-    <div className="fix flex-col justify-between min-h-screen w-[220px] bg-white font-Poppins border-r border-gray-100">
+    <div className={`flex flex-col justify-between h-full transition-all duration-250 ${isCollapsed ? "w-[54px]" : "w-[250px]"} bg-white text-gray-800 shadow`}>
       <div>
-        {/* Logo Section */}
-        <div className="flex items-center justify-center pt-3 pb-4 border-b border-gray-100 bg-white">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-[90px] h-auto object-contain"
-            style={{ marginBottom: "-8px" }}
-          />
-        </div>
-
-        {/* Add New Button */}
-        <div className="px-4 mt-6 mb-8">
-          <button
-            onClick={handleAddNewClick}
-            className="w-full flex font-Poppins items-center justify-center gap-1 bg-orange-500 text-white font-semibold text-base px-4 py-2.5 rounded-md hover:bg-orange-600 transition"
-            style={{ letterSpacing: "0.01em" }}
-          >
-            Add New <Plus size={16} />
-          </button>
-        </div>
-
-        {/* Menu Items */}
-        <nav className="px-2">
+        <nav className={`mt-2 ${isCollapsed ? "px-1" : "px-4"}`}>
           {menuItems.map((item) => (
             <button
               key={item.name}
               onClick={() => handleMenuItemClick(item)}
-              className={`flex items-center gap-2 w-full px-3 py-2 mb-1 rounded-lg text-left transition-all ${
+              className={`flex items-center ${isCollapsed ? "justify-center" : "gap-4"} w-full ${isCollapsed ? "px-1 py-3" : "px-4 py-3"} mb-1 transition-all rounded-full ${
                 activeItem === item.name
-                  ? "bg-blue-600 text-white font-semibold"
-                  : "text-gray-600 font-medium hover:bg-gray-50"
+                  ? "bg-blue-100 text-blue-800 font-semibold"
+                  : "text-gray-500 font-medium hover:bg-gray-100"
               }`}
             >
-              {item.icon}
-              {item.name}
+              <div className={`${activeItem === item.name ? "text-blue-600" : "text-gray-500"}`}>
+                {item.icon}
+              </div>
+              {!isCollapsed && <span className="text-sm">{item.name}</span>}
             </button>
           ))}
         </nav>
       </div>
 
-      {/* Bottom Menu */}
-      <div className="p-4 border-t border-gray-100">
-        <button
-          onClick={() => navigate("/sales/settings")}
-          className="flex items-center gap-2 w-full px-3 py-2 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <Settings size={16} /> Setting
-        </button>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 w-full px-3 py-2 text-gray-600 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <LogOut size={16} /> Logout
-        </button>
-      </div>
-    </div>
+      <div className="flex items-center justify-center pt-2 pb-2">
+          <button
+            className="bg-gray-100 rounded-full p-1 hover:bg-blue-100 transition"
+            onClick={() => setIsCollapsed((prev) => !prev)}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? <ChevronRight size={22} /> : <ChevronLeft size={22} />}
+          </button>
+        </div>
+      {/* Bottom Settings and Logout */}
+  {/* <div className={`p-4 ${isCollapsed ? "flex flex-col items-center" : ""}`}>
+    <div className={`my-6 border-t border-gray-200 ${isCollapsed ? "mx-1" : "mx-4"}`}></div>
+    <button
+      onClick={() => navigate("/settings")}
+      className={`flex items-center gap-4 w-full ${isCollapsed ? "justify-center px-1 py-3" : "px-4 py-3"} text-gray-500 font-medium rounded-full hover:bg-gray-100 transition-colors mb-2`}
+    >
+      <Settings size={20} />
+      {!isCollapsed && <span className="text-sm">Setting</span>}
+    </button>
+    <button
+      onClick={handleLogout}
+      className={`flex items-center gap-4 w-full ${isCollapsed ? "justify-center px-1 py-3" : "px-4 py-3"} text-gray-500 font-medium rounded-full hover:bg-gray-100 transition-colors`}
+    >
+      <LogOut size={20} />
+      {!isCollapsed && <span className="text-sm">Logout</span>}
+    </button>
+  </div> */}
+</div>
   );
 };
 

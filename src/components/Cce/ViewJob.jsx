@@ -82,10 +82,9 @@ const [editData, setEditData] = useState(null); // for Edit small popup
   };
 
   return (
-    <div className="p-2 bg-gray-50 min-h-screen">
-  <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="h-screen">
     {/* Header + Tabs in one row */}
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center justify-between mb-4 mt-4">
       <h1 className="text-2xl font-semibold text-gray-800">View Job</h1>
 
       <div className="flex space-x-2">
@@ -477,7 +476,6 @@ const [editData, setEditData] = useState(null); // for Edit small popup
     </div>
   </div>
 )}
-    </div>
     </div>
   );
 };

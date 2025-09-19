@@ -7,7 +7,6 @@ import SalesRoutes from "./pages/SalesManagementSystem/SalesRoutes";
 import SalesManagementSystem from "./pages/SalesManagementSystem/SalesManagementSystem";
 import CceManagementSystem from "./pages/CceManagementSystem/CceManagementSystem";
 import CceRoutes from "./pages/CceManagementSystem/CceRoutes";
-import CceLogin from "./components/Cce/CceLogin";
 import StockrManagementSystem from "./pages/StockManagementSystem/StockManagementSystem";
 import StockRoutes from "./pages/StockManagementSystem/StockRoutes";
 
@@ -28,11 +27,6 @@ function App() {
     {
       path: "/login",
       element: <SalesLogin />,
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/cce-login",
-      element: <CceLogin />,
       errorElement: <ErrorPage />,
     },
     {

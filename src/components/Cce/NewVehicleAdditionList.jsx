@@ -57,10 +57,9 @@ const NewDeviceAdditionList = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="h-screen">
       {/* Header */}
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 mt-4">
         New Device Addition List
       </h1>
 
@@ -269,7 +268,6 @@ const NewDeviceAdditionList = () => {
           </form>
         </div>
       )}
-    </div>
     </div>
   );
 };

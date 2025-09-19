@@ -1,9 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Calendar, Users } from "lucide-react";
 
 export default function RequisitionForm() {
   const [formData, setFormData] = useState({
-    assignInput: '',
+    homeToAssign: '',
     locationInput: '',
     clientDropdown: '',
     purposeDropdown: '',
@@ -14,11 +15,8 @@ export default function RequisitionForm() {
     productQty: { acWiring: '', sim: '', marker: '', bigTie: '' },
   });
 
-  const navigate = useNavigate();
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // For nested objects handle separately
     if (name.startsWith('prodDesc_')) {
       const key = name.split('_')[1];
       setFormData(prev => ({
@@ -55,108 +53,128 @@ export default function RequisitionForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: handle form submission, validation etc
-    navigate('/some-success-page'); // change according to your app
+    console.log("Form submitted:", formData);
   };
 
-  const todayStr = new Date().toLocaleDateString();
+  const todayStr = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).replace(/ /g, '.').replace(',', '');
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+    <div className="min-h-screen bg-gray-50 p-8 relative">
+      <div className="w-full mx-auto bg-white rounded-lg shadow-xl p-6 sm:p-8">
         {/* Top header with title, team, date */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Requisition Form</h1>
-          <div className="flex items-center gap-4 text-blue-600 font-semibold">
-            <div className="px-3 py-1 border border-blue-600 rounded">Team D</div>
-            <div>{todayStr}</div>
+        <div className="flex justify-between items-center mb-8 justify-center">
+          <h1 className="text-2xl font-bold text-gray-500 flex-1 text-center">Requisition Form</h1>
+          <div className="flex items-center gap-4 text-blue-600 font-semibold text-sm absolute right-14">
+            <div className="flex items-center gap-2 px-3 py-1 border border-blue-600 rounded-md">
+              <Users size={16} />
+              <span>Team D</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 border border-blue-600 rounded-md">
+              <Calendar size={16} />
+              <span>{todayStr}</span>
+            </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Assign input, Location input */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Main Form Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
+            {/* Home to assign */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Assign Input</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Home to assign
+              </label>
               <input
                 type="text"
-                name="assignInput"
-                value={formData.assignInput}
+                name="homeToAssign"
+                value={formData.homeToAssign}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter assignment"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Prabhakar"
                 required
               />
             </div>
 
+            {/* Location */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Location Input</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
               <input
                 type="text"
                 name="locationInput"
                 value={formData.locationInput}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter location"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Mumbai"
                 required
               />
             </div>
-          </div>
 
-          {/* Client dropdown, Purpose dropdown */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Client dropdown */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Client Dropdown</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Client
+              </label>
               <select
                 name="clientDropdown"
                 value={formData.clientDropdown}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
                 required
               >
-                <option value="">Select Client</option>
+                <option value="">New</option>
                 <option value="Client A">Client A</option>
                 <option value="Client B">Client B</option>
               </select>
             </div>
 
+            {/* Purpose dropdown */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Purpose Dropdown</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Purpose
+              </label>
               <select
                 name="purposeDropdown"
                 value={formData.purposeDropdown}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
                 required
               >
-                <option value="">Select Purpose</option>
+                <option value="">E-lock</option>
                 <option value="Purpose 1">Purpose 1</option>
                 <option value="Purpose 2">Purpose 2</option>
               </select>
             </div>
-          </div>
 
-          {/* Job Type dropdown, Payment Status (radio) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Job Type dropdown */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Job Type Dropdown</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Job type
+              </label>
               <select
                 name="jobTypeDropdown"
                 value={formData.jobTypeDropdown}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
                 required
               >
-                <option value="">Select Job Type</option>
+                <option value="">Service</option>
                 <option value="Installation">Installation</option>
                 <option value="Repair">Repair</option>
-                <option value="Service">Service</option>
               </select>
             </div>
 
+            {/* Payment Status (radio) */}
             <div>
-              <label className="block font-medium text-gray-700 mb-1">Payment Status</label>
-              <div className="flex items-center space-x-6 mt-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Payment Status
+              </label>
+              <div className="flex items-center space-x-6 mt-2">
                 {['Yes', 'No'].map((option) => (
                   <label key={option} className="flex items-center space-x-2">
                     <input
@@ -165,69 +183,78 @@ export default function RequisitionForm() {
                       value={option}
                       checked={formData.paymentStatus === option}
                       onChange={handleRadioChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      className="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       required
                     />
-                    <span>{option}</span>
+                    <span className="text-sm text-gray-700">{option}</span>
                   </label>
                 ))}
               </div>
             </div>
+
+            {/* Overall Material Required */}
+            <div className="col-span-1 sm:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Over All Material Required
+              </label>
+              <input
+                type="number"
+                name="overallMaterialRequired"
+                value={formData.overallMaterialRequired}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="4"
+                required
+              />
+            </div>
           </div>
+          
+          {/* Production Description and Product Qty grid */}
+          <div className="grid grid-cols-2 gap-x-12 mt-6">
+            <div>
+              <div className="font-semibold text-gray-700 mb-2">
+                Production Description
+              </div>
+              <div className="space-y-4">
+                {['acWiring', 'sim', 'marker', 'bigTie'].map((key) => (
+                  <input
+                    key={key}
+                    type="text"
+                    name={`prodDesc_${key}`}
+                    placeholder={{ acWiring: 'AC Wiring', sim: 'Sim', marker: 'Marker', bigTie: 'Big Tie' }[key]}
+                    value={formData.productionDescription[key]}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                ))}
+              </div>
+            </div>
 
-          {/* Overall Material Required */}
-          <div>
-            <label className="block font-medium text-gray-700 mb-1">Over All Material Required</label>
-            <input
-              type="number"
-              name="overallMaterialRequired"
-              value={formData.overallMaterialRequired}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="Enter number"
-              required
-            />
+            <div>
+              <div className="font-semibold text-gray-700 mb-2">
+                Product Qty
+              </div>
+              <div className="space-y-4">
+                {['acWiring', 'sim', 'marker', 'bigTie'].map((key) => (
+                  <input
+                    key={`qty_${key}`}
+                    type="number"
+                    name={`prodQty_${key}`}
+                    placeholder="Qty"
+                    value={formData.productQty[key]}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-
-          {/* Production Description and Product Qty Inline */}
-          <div>
-  <div className="mb-3 font-medium text-gray-700">Production Description</div>
-  <div className="grid grid-cols-4 gap-3">
-    {['acWiring', 'sim', 'marker', 'bigTie'].map((key) => (
-      <input
-        key={key}
-        type="text"
-        name={`prodDesc_${key}`}
-        placeholder={{ acWiring: 'AC Wiring', sim: 'Sim', marker: 'Marker', bigTie: 'Big Tie' }[key]}
-        value={formData.productionDescription[key]}
-        onChange={handleInputChange}
-        className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-      />
-    ))}
-  </div>
-
-  <div className="mb-3 font-medium text-gray-700 mt-6">Product Qty.</div>
-  <div className="grid grid-cols-4 gap-3">
-    {['acWiring', 'sim', 'marker', 'bigTie'].map((key) => (
-      <input
-        key={`qty_${key}`}
-        type="number"
-        name={`prodQty_${key}`}
-        placeholder="Qty"
-        value={formData.productQty[key]}
-        onChange={handleInputChange}
-        className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-      />
-    ))}
-  </div>
-</div>
-
-          {/* Submit Button */}
-          <div className="pt-4">
+          
+          {/* Buttons Section */}
+          <div className="pt-8 flex justify-center space-x-4">
             <button
               type="submit"
-              onClick={handleSubmit}
-              className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
               Submit
             </button>

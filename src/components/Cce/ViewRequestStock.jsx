@@ -91,9 +91,8 @@ const ViewStockRequest = () => {
   };
 
   return (
-    <div className="p-2 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">View Stock Request</h1>
-      <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="min-h-screen">
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 mt-4">View Stock Request</h1>
 
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
         
@@ -182,7 +181,6 @@ const ViewStockRequest = () => {
           </table>
         </div>
       </div>
-    </div>
     </div>
   );
 };

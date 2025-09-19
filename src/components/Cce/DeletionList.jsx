@@ -4,64 +4,104 @@ import { X } from "lucide-react";
 const DeleteList = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [formData, setFormData] = useState({
+    date: "",
+    userName: "",
+    vehicleNo: "",
+    deviceImei: "",
+    deviceSim: "",
+    currentLocation: "",
+    deviceStatus: "",
+    reason: "",
+  });
 
   const rows = [
     {
-      date: "2025-06-09 11:26:27",
-      username: "Fasttrack",
-      company: "Fasttrack Pvt Ltd",
-      vehicleNo: "0488NL01L",
-      deviceModel: "WeTrack",
-      imei: "123456789012345",
-      sim: "9876543210",
-      location: "gtrack office",
-      status: "StopGPS",
-      reason: "Sold Vehicle (on client request)",
-      dateOfInstallation: "2023-05-12",
-      statusType: "error",
-    },
-    {
-      date: "2025-06-09 11:26:27",
-      username: "Fasttrack",
-      vehicleNo: "0488NL01L",
-      imei: "123456789012345",
-      sim: "9876543210",
-      location: "gtrack office",
-      status: "SoldVehicle",
-      reason: "on client request",
-      statusType: "error", // for red styling like your status
-    },
+    date: "2025-06-09 11:26:27",
+    userName: "Fasttrack",
+    company: "Fasttrack Pvt Ltd",
+    vehicleNo: "0488NL01L",
+    deviceImei: "123456789012345",
+    deviceSim: "9876543210",
+    currentLocation: "gtrack office",
+    deviceStatus: "Stop GPS",
+    reason: "Sold Vehicle"
+  },
+   {
+    date: "2025-06-09 11:26:27",
+    userName: "Fasttrack",
+    vehicleNo: "0488NL01L",
+    deviceImei: "123456789012345",
+    deviceSim: "9876543210",
+    currentLocation: "gtrack office",
+    deviceStatus: "SoldVehicle",
+    reason: "on client request",
+  },
   ];
 
   const handleViewDetails = (row) => {
     setSelectedRow(row);
+    setFormData({ ...row });
     setShowPopup(true);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // You could send formData to backend here
+    console.log("Submitted Data:", formData);
+    setShowPopup(false);
+  };
+
+  const handleCancel = () => {
+    setShowPopup(false);
+  };
+
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="h-screen">
       {/* Header */}
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 mt-4">
         Deletion List
       </h1>
 
       {/* Table Container */}
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
-        
-        <div className="">
+
+        <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
   <thead>
     <tr className="border-gray-200">
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Date</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Username</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Vehicle No</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device IMEI</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device Sim</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Current Location</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Device Status</th>
-      <th className="px-1 py-4 text-center font-semibold text-gray-400">Reason</th>
-      <th className="pr-1 py-4 text-center font-semibold text-gray-400">View Details</th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Date
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        User Name
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Vehicle No
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Device IMEI
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Device SIM
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Current Location
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Device Status
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        Reason
+      </th>
+      <th className="px-4 py-4 text-left font-semibold text-gray-400">
+        View Details
+      </th>
     </tr>
   </thead>
   <tbody className="bg-white">
@@ -70,27 +110,27 @@ const DeleteList = () => {
         key={idx}
         className="border-b border-gray-100 hover:bg-gray-50"
       >
-        <td className="px-1 py-4 text-gray-700 text-center">{row.date}</td>
-        <td className="px-1 py-4 text-gray-800 font-medium text-center">
-          {row.username}
+        <td className="px-4 py-4 text-gray-700">{row.date}</td>
+        <td className="px-4 py-4 text-gray-800 font-medium">
+          {row.userName}
         </td>
-        <td className="px-1 py-4 text-gray-700 text-center">{row.vehicleNo}</td>
-        <td className="px-1 py-4 text-gray-700 text-center">{row.imei}</td>
-        <td className="px-1 py-4 text-gray-700 text-center">{row.sim}</td>
-        <td className="px-1 py-4 text-gray-700 text-center">{row.location}</td>
-        <td className="px-1 py-4">
+        <td className="px-4 py-4 text-gray-700">{row.vehicleNo}</td>
+        <td className="px-4 py-4 text-gray-700">{row.deviceImei}</td>
+        <td className="px-4 py-4 text-gray-700">{row.deviceSim}</td>
+        <td className="px-4 py-4 text-gray-700">{row.currentLocation}</td>
+        <td className="px-4 py-4">
           <span
-            className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
-              row.statusType === "error"
-                ? "bg-red-50 text-red-700 border-red-200"
-                : "bg-green-50 text-green-700 border-green-200"
-            }`}
-          >
-            {row.status}
-          </span>
+          className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
+            row.statusType === "error"
+              ? "bg-red-50 text-red-700 border-red-200"
+              : "bg-red-50 text-red-700 border-red-200"
+          }`}
+        >
+          {row.deviceStatus}
+        </span>
         </td>
-        <td className="px-6 py-4 text-gray-700">{row.reason}</td>
-        <td className="pr-10 py-4">
+        <td className="px-4 py-4 text-gray-700">{row.reason}</td>
+        <td className="px-4 py-4">
           <button
             className="text-blue-600 font-medium hover:underline text-sm"
             onClick={() => handleViewDetails(row)}
@@ -334,7 +374,6 @@ const DeleteList = () => {
           </div>
         </div>
       )}
-    </div>
     </div>
   );
 };
