@@ -1,366 +1,316 @@
 import React, { useState } from "react";
-import { User, Building, File, CalendarDays, TabletSmartphone, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { User, Car } from "lucide-react";
+
+const issueLabels = {
+    NoPower: "No Power",
+    Temperature: "Temperature Issue",
+    Failure: "Failure",
+    Delay: "Delay",
+    Others: "Others",
+};
 
 const RaiseService = () => {
-  const [formData, setFormData] = useState({
-    clientUserName: "lotusvalleynoida",
-    companyName: "Highway Trans services Pvt Ltd (Lotus Valley Noida)",
-    registrationNo: "UP16JT4492",
-    deviceIMEI: "1194042",
-    dateOfInstallation: "2015-10-08 13:35:46",
-    notWorking: "2024-04-11 00:05:41",
-    issue: {
-      AC: false,
-      IPBox: false,
-      Panic: false,
-      Temperature: false,
-      Other: false,
-      NotWorking: false,
-      Immobilize: false,
-    },
-    location: "Mumbai",
-    branch: "Delhi",
-    deviceModel: "",
-    personName: "Amar",
-    fromTime: "2024-12-10",
-    toTime: "2025-01-02",
-    contactNo: "9876543210",
-    remark: "",
-  });
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    // Expecting 'vehicles' array now from NotWorkingVehicle
+    // vehicles is an array of objects: [{ vehicleNo: 'V1', ... }, { vehicleNo: 'V2', ... }]
+    const { vehicles = [], username = "", companyName = "" } = location.state || {}; 
+    
+    // Extract a comma-separated list of vehicle numbers for DISPLAY ONLY
+    const vehicleNosDisplay = vehicles.map(v => v.vehicleNo).join(', ');
 
-  const deviceModelOptions = ["Select One", "Model A", "Model B", "Model C"];
-  const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        clientUserName: username,
+        registrationNo: vehicleNosDisplay, // Kept for display, but not used directly in the submission logic below
+        company: companyName,
+        issue: { NoPower: false, Temperature: false, Failure: false, Delay: false, Others: false },
+        otherIssueText: "",
+        location: "",
+        contactPerson: "",
+        contactNumber: "",
+        recommendedAction: "",
+    });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        issue: { ...prev.issue, [name]: checked },
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    // You can replace this with a custom modal or message box
-    console.log("Service request submitted!");
-  };
+    const [date, setDate] = useState(
+        new Date().toISOString().split("T")[0]
+    );
 
-  const issueLabels = {
-    AC: "AC",
-    IPBox: "IP Box",
-    Panic: "Panic",
-    Temperature: "Temperature",
-    Other: "Other",
-    NotWorking: "Not Working",
-    Immobilize: "Immobilize",
-  };
+    // ... (handleChange and handleCancel remain the same) ...
 
-  const handleCancel = (e) => {
-    e.preventDefault();
-    navigate("/cce/not-working");
-  };
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        if (name in formData.issue) {
+            setFormData((prev) => ({
+                ...prev,
+                issue: {
+                    ...prev.issue,
+                    [name]: checked,
+                },
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: type === "checkbox" ? checked : value,
+            }));
+        }
+    };
 
-  return (
-    <div className="min-h-screen p-2 sm:p-14 flex justify-center">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 sm:p-10 space-y-8">
-        {/* Header */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-500">
-          Raise Service
-        </h2>
+    const handleCancel = () => {
+        navigate(-1);
+    };
 
-        {/* Upper Info Boxes */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700 text-sm border-b pb-6">
-          {/* Client User Name */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-red-100 rounded-md">
-              <User className="text-red-500 w-5 h-5" />
-            </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Client User Name:<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {formData.clientUserName}
-              </div>
-            </div>
-            <div>|</div>
-          </div>
+    // 🚀 THE CRITICAL FIX IS HERE
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (vehicles.length === 0) {
+            alert("No vehicles were selected for the service request. Please go back and select vehicles.");
+            return;
+        }
 
-          {/* Company Name */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-teal-100 rounded-md">
-              <Building className="text-teal-500 w-5 h-5" />
-            </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Company Name:<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {formData.companyName}
-              </div>
-            </div>
-            <div>|</div>
-          </div>
+        setIsSubmitting(true);
 
-          {/* Registration No */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-blue-100 rounded-md">
-              <File className="text-blue-500 w-5 h-5" />
-            </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Registration No<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {formData.registrationNo}
-              </div>
-            </div>
-          </div>
+        const problems = Object.keys(formData.issue)
+            .filter((k) => formData.issue[k])
+            .map((k) => (k === "Others" ? `${issueLabels[k]}: ${formData.otherIssueText}` : issueLabels[k]))
+            .join(", ") || "N/A";
 
-          {/* Device IMEI */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-red-100 rounded-md">
-              <Search className="text-red-500 w-5 h-5" />
-            </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Device IMEI:<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {formData.deviceIMEI}
-              </div>
-            </div>
-            <div>|</div>
-          </div>
+        // Data common to ALL service requests
+        const commonData = {
+            username: formData.clientUserName,
+            company: formData.company,
+            problem: problems,
+            contactPerson: formData.contactPerson,
+            contactNumber: formData.contactNumber,
+            serviceLocation: formData.location, 
+            date,
+            recommendedAction: formData.recommendedAction,
+            status: 'Raised', // Set initial status
+        };
 
-          {/* Date Of Installation */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-teal-100 rounded-md">
-              <CalendarDays className="text-teal-500 w-5 h-5" />
-            </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Date Of Installation:<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {new Date(formData.dateOfInstallation).toLocaleDateString()}
-              </div>
-            </div>
-            <div>|</div>
-          </div>
+        let successCount = 0;
+        let failedVehicles = [];
 
-          {/* Not working */}
-          <div className="flex items-center gap-3 p-3 rounded-lg min-w-0">
-            <div className="p-2 bg-orange-100 rounded-md">
-              <TabletSmartphone className="text-orange-500 w-5 h-5" />
+        // 💡 LOOP THROUGH EACH SELECTED VEHICLE AND SUBMIT A SEPARATE REQUEST
+        for (const vehicle of vehicles) {
+            const requestData = {
+                ...commonData,
+                // Assign the UNIQUE vehicleNo for THIS specific request
+                vehicleNo: vehicle.vehicleNo, 
+                // You might also want to include IMEI, current Lat/Long etc., from the vehicle object here
+            };
+
+            try {
+                const response = await fetch("http://localhost:5000/api/service-requests", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+                successCount++;
+
+            } catch (err) {
+                console.error(`Error submitting request for ${vehicle.vehicleNo}:`, err);
+                failedVehicles.push(vehicle.vehicleNo);
+            }
+        }
+
+        setIsSubmitting(false);
+
+        // Final feedback to the user
+        if (failedVehicles.length === 0) {
+            alert(`✅ Successfully submitted ${successCount} service request(s)!`);
+        } else {
+            alert(`⚠️ Submitted ${successCount} requests, but failed for the following vehicles: ${failedVehicles.join(', ')}. Check the console for details.`);
+        }
+
+        // Clean up the status persistence (if your backend handles status persistence upon fetch, this might be redundant)
+        const allSubmittedVehicleNos = vehicles.map(v => v.vehicleNo);
+        localStorage.setItem('lastServiceRequest', JSON.stringify({
+            vehicleNos: allSubmittedVehicleNos, 
+            status: 'Raised'
+        }));
+
+        // Navigate away after submission
+        setTimeout(() => {
+            navigate("/cce/view-jobs");
+        }, 0); 
+    };
+
+    return (
+        <div className="min-h-screen p-4 sm:p-10 flex justify-center bg-gray-100">
+            <div className="bg-white rounded-2xl shadow-lg w-full max-w-4xl p-8 space-y-10">
+                
+                {/* Header - Softened Text */}
+                <h2 className="text-3xl font-bold text-center text-gray-600">
+                    Raise Service Request ({vehicles.length} Vehicle{vehicles.length !== 1 ? 's' : ''})
+                </h2>
+
+                {/* Centered Top Info Cards - Using softer colors (gray-100, blue-200) */}
+                <div className="flex justify-center gap-6 pb-8 flex-wrap">
+                    {[
+                        { icon: User, label: "Client User Name", value: formData.clientUserName, iconBg: "bg-red-50", iconText: "text-red-500", color: "text-red-700" },
+                        { icon: Car, label: "Vehicle Reg No.", value: formData.registrationNo, iconBg: "bg-blue-50", iconText: "text-blue-500", color: "text-blue-700" },
+                    ].map(({ icon: Icon, label, value, iconBg, iconText }, idx) => (
+                        <div
+                            key={idx}
+                            className="flex items-center gap-4 p-3 bg-gray-100 rounded-lg shadow-inner w-80"
+                        >
+                            <div className={`p-2 ${iconBg} rounded-md flex-shrink-0`}>
+                                <Icon className={`${iconText} w-5 h-5`} />
+                            </div>
+                            <div className="flex-grow min-w-0">
+                                <p className="text-xs font-medium text-gray-500">
+                                    {label} <span className="text-red-400">*</span>
+                                </p>
+                                <p className="text-sm font-semibold text-gray-700 break-words">{value}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Main Form */}
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-gray-700"
+                >
+                    {/* ... (All form fields remain the same) ... */}
+                    {/* Issue checkboxes (md:col-span-2) */}
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-semibold text-gray-600 mb-3">
+                            Issue <span className="text-red-400">*</span>
+                        </label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            {Object.keys(formData.issue).map((key) => (
+                                <label key={key} className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name={key}
+                                        checked={formData.issue[key]}
+                                        onChange={handleChange}
+                                        className="h-4 w-4 accent-blue-400"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                        {issueLabels[key] || key}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+
+                        {/* If "Others" selected → text input */}
+                        {formData.issue.Others && (
+                            <div className="mt-3">
+                                <input
+                                    type="text"
+                                    name="otherIssueText"
+                                    value={formData.otherIssueText}
+                                    onChange={handleChange}
+                                    placeholder="Please specify other issue"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Date Picker */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-600 mb-1">
+                            Service Date <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            name="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                        />
+                    </div>
+
+                    {/* Location - TEXTAREA */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-600 mb-1">
+                            Service Location <span className="text-red-400">*</span>
+                        </label>
+                        <textarea
+                            rows="3"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleChange}
+                            placeholder="Enter detailed service location (e.g., specific street, parking lot, landmark)"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                        />
+                    </div>
+                    
+                    {/* Contact Person */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-600 mb-1">
+                            Contact Person <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="contactPerson"
+                            value={formData.contactPerson}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                        />
+                    </div>
+
+                    {/* Contact Number */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-600 mb-1">
+                            Contact Number <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="contactNumber"
+                            value={formData.contactNumber}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                        />
+                    </div>
+
+                    {/* Recommended Action - TEXTAREA (Full Width) */}
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-semibold text-gray-600 mb-1">
+                            Recommended Action / Parts Required
+                        </label>
+                        <textarea
+                            rows="3"
+                            name="recommendedAction"
+                            value={formData.recommendedAction}
+                            onChange={handleChange}
+                            placeholder="Specify the technician's recommended action or any necessary parts (e.g., 'Device replacement needed', 'Spare parts: 1x GPS Antenna')."
+                            className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:ring-1 focus:ring-blue-300"
+                        />
+                    </div>
+
+                    {/* Buttons - Duller Submit Button */}
+                    <div className="md:col-span-2 flex justify-center gap-6 pt-4">
+                        <button
+                            type="submit"
+                            disabled={isSubmitting} // Disable button while submitting
+                            className="px-10 py-2 bg-blue-400 text-white rounded-md font-medium hover:bg-blue-500 transition shadow-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            {isSubmitting ? 'Submitting...' : `Submit Request${vehicles.length > 1 ? 's' : ''}`}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-10 py-2 border border-gray-300 text-gray-600 rounded-md font-medium hover:bg-gray-50 transition"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div className="flex-grow min-w-0">
-              <div className="font-medium text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                Not working:<span className="text-red-500">*</span>
-              </div>
-              <div className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                {new Date(formData.notWorking).toLocaleDateString()}
-              </div>
-            </div>
-          </div>
         </div>
-
-        {/* Main form grid */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-3 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-800">
-          {/* Issue Checkboxes - Full width */}
-          <div className="md:col-span-2">
-            <span className="block text-sm font-bold text-gray-700 mb-2">Issue:<span className="text-red-500">*</span></span>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {Object.keys(formData.issue).map((key) => (
-                <label key={key} className="inline-flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    name={key}
-                    checked={formData.issue[key]}
-                    onChange={handleChange}
-                    className="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
-                  />
-                  <span className="text-sm text-gray-700">{issueLabels[key]}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Location */}
-          <div>
-            <label htmlFor="location" className="block text-sm font-bold text-gray-700 mb-1">
-              Location:<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Branch Radio Buttons */}
-          <div>
-            <span className="block text-sm font-bold text-gray-700 mb-1">Branch:<span className="text-red-500">*</span></span>
-            <div className="flex gap-6 mt-2">
-              <label className="inline-flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="branch"
-                  value="Delhi"
-                  checked={formData.branch === "Delhi"}
-                  onChange={handleChange}
-                  className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                />
-                <span className="text-sm text-gray-700">Delhi</span>
-              </label>
-              <label className="inline-flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="branch"
-                  value="Inter Branch"
-                  checked={formData.branch === "Inter Branch"}
-                  onChange={handleChange}
-                  className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                />
-                <span className="text-sm text-gray-700">Inter Branch</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Device Model */}
-          <div>
-            <label htmlFor="deviceModel" className="block text-sm font-bold text-gray-700 mb-1">
-              Device Model:<span className="text-red-500">*</span>
-            </label>
-            <select
-              id="deviceModel"
-              name="deviceModel"
-              value={formData.deviceModel}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-              required
-            >
-              {deviceModelOptions.map((model) => (
-                <option key={model} value={model} disabled={model === "Select One"}>
-                  {model}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Person Name */}
-          <div>
-            <label htmlFor="personName" className="block text-sm font-bold text-gray-700 mb-1">
-              Person Name:<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="personName"
-              name="personName"
-              value={formData.personName}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* From Time */}
-          <div className="relative">
-            <label htmlFor="fromTime" className="block text-sm font-bold text-gray-700 mb-1">
-              From Time:<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              id="fromTime"
-              name="fromTime"
-              value={formData.fromTime}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* To Time */}
-          <div className="relative">
-            <label htmlFor="toTime" className="block text-sm font-bold text-gray-700 mb-1">
-              To Time:<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              id="toTime"
-              name="toTime"
-              value={formData.toTime}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Contact No */}
-          <div>
-            <label htmlFor="contactNo" className="block text-sm font-bold text-gray-700 mb-1">
-              Contact No:<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="tel"
-              id="contactNo"
-              name="contactNo"
-              value={formData.contactNo}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Empty div for layout balance in a grid */}
-          <div className="hidden md:block"></div>
-
-          {/* Remark textarea - Full width */}
-          <div className="md:col-span-2">
-            <label htmlFor="remark" className="block text-sm font-bold text-gray-700 mb-1">
-              Remark:<span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="remark"
-              name="remark"
-              value={formData.remark}
-              onChange={handleChange}
-              rows="4"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-              required
-            />
-          </div>
-
-          {/* Buttons - Full width, centered */}
-          <div className="md:col-span-2 flex justify-center gap-6 pt-4">
-            <button
-              type="submit"
-              className="px-10 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-10 py-2 bg-gray-300 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default RaiseService;

@@ -1,481 +1,165 @@
-import React, { useState } from "react";
-import { Edit2, X } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../api/axiosInstance';
 
+// Helper component for Status badge
+const StatusBadge = ({ status }) => {
+  const isApproved = status === 'Approved';
+  const colorClass = isApproved
+    ? 'bg-green-100 text-green-700'
+    : 'bg-red-100 text-red-700';
+
+  return (
+    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${colorClass}`}>
+      {status}
+    </span>
+  );
+};
+
+// Main Component
 const ViewJob = () => {
-  const [activeTab, setActiveTab] = useState("Installation");
-  const [showEditPopup, setShowEditPopup] = useState(false);
-  const [showDetailsPopup, setShowDetailsPopup] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null); // for View Details
-const [editData, setEditData] = useState(null); // for Edit small popup
-  const [approveVehicles, setApproveVehicles] = useState("");
+  const [installations, setInstallations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [activeJobIdForAction, setActiveJobIdForAction] = useState(null);
+  const [approveCount, setApproveCount] = useState(1);
 
-  const jobs = [
-    {
-      client: "Cttpl",
-      vehicles: 10,
-      location: "Noida Sec 63",
-      device: "WeTrack",
-      time: "12:00 PM 27 Jan 2025",
-      status: "Approved by Admin",
-      statusType: "success",
-    },
-    {
-      client: "Snfget",
-      vehicles: 5,
-      location: "Sarita Vihar",
-      device: "Pointer",
-      time: "03:00 PM 22 Jun 2022",
-      status: "Back Form Admin",
-      statusType: "error",
-    },
-    {
-      client: "Balasub3",
-      vehicles: 3,
-      location: "Gurgaon",
-      device: "Others",
-      time: "12:00 PM 23 Jan 2025",
-      status: "Approved by Admin",
-      statusType: "success",
-    },
-    {
-      client: "Amobus",
-      vehicles: 2,
-      location: "Mumbai",
-      device: "WeTrack",
-      time: "05:00 PM 23 Jun 2025",
-      status: "Approved by Admin",
-      statusType: "success",
-    },
-  ];
-
-  const handleOpenEdit = (job) => {
-  setEditData({
-    approveVehicles: job.vehicles || ""   // prefill if needed
-  });
-  setShowEditPopup(true);
-};
-
-  const handleEditClick = (job) => {
-  setSelectedJob(job);
-  setEditData({
-    approveVehicles: job.vehicles || ""  // pre-fill field
-  });
-  setShowEditPopup(true);
-};
-
-  const handleViewDetailsClick = (job) => {
-    setSelectedJob(job);
-    setShowDetailsPopup(true);
+  // Fetch approved installations from backend
+  const fetchInstallations = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await axiosInstance.get("/installations");
+      // Filter only Approved installations
+      const approved = res.data.filter((inst) => inst.status === "Approved");
+      setInstallations(approved);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch installations");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEditSubmit = () => {
-    console.log("Send to Dispatcher:", {
-      client: selectedJob.client,
-      approveVehicles,
-    });
-    setShowEditPopup(false);
+  useEffect(() => {
+    fetchInstallations();
+  }, []);
+
+  const handleSendClick = (jobId, maxCount) => {
+    if (activeJobIdForAction === jobId) {
+      setActiveJobIdForAction(null);
+    } else {
+      setActiveJobIdForAction(jobId);
+      setApproveCount(maxCount);
+    }
   };
 
-   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const ActionBlock = ({ jobId, vehicleCount }) => {
+    const isActionActive = activeJobIdForAction === jobId;
+
+    if (isActionActive) {
+      return (
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center bg-white shadow-2xl rounded-xl p-3 border border-gray-200 z-10 w-64">
+          <div className="flex flex-col space-y-2 w-full">
+            <label className="text-xs font-medium text-gray-700">No. of Approve Device</label>
+            <input
+              type="number"
+              value={approveCount}
+              min="1"
+              max={vehicleCount}
+              onChange={(e) =>
+                setApproveCount(Math.min(parseInt(e.target.value) || 1, vehicleCount))
+              }
+              className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 rounded-lg transition duration-150 shadow-md"
+              onClick={() => {
+                console.log(`Sending ${approveCount} devices to Dispatcher for Job ${jobId}`);
+                setActiveJobIdForAction(null);
+              }}
+            >
+              Send to Dispatcher
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-150 shadow-md"
+        onClick={() => handleSendClick(jobId, vehicleCount)}
+      >
+        Send
+      </button>
+    );
   };
 
   return (
-    <div className="h-screen">
-    {/* Header + Tabs in one row */}
-    <div className="flex items-center justify-between mb-4 mt-4">
-      <h1 className="text-2xl font-semibold text-gray-800">View Job</h1>
-
-      <div className="flex space-x-2">
-        {["Installation", "Service", "Removal"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              activeTab === tab
-                ? "bg-orange-500 text-white shadow-sm"
-                : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-    </div>
-
-      {/* Table Container */}
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border-gray-200">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-gray-200">
-                <th className="px-2 py-2 text-left font-semibold text-gray-700 w-8">
-                  {/* <input
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                  /> */}
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Client Name
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  No. of Vehicle
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Location
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Device Model
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Available Time
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Status
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  View Details
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Edit
-                </th>
-                <th className="px-1 py-4 text-left font-semibold text-gray-400">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {jobs.map((job, idx) => (
-                <tr
-                  key={idx}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  <td className="px-2 py-2">
-                    {/* <input
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded"
-                    /> */}
-                  </td>
-                  <td className="px-6 py-4 text-gray-800 font-medium">
-                    {job.client}
-                  </td>
-                  <td className="px-2 py-4 text-gray-700">{job.vehicles}</td>
-                  <td className="px-2 py-4 text-gray-700">{job.location}</td>
-                  <td className="px-2 py-4 text-gray-700">{job.device}</td>
-                  <td className="px-2 py-4 text-gray-700">{job.time}</td>
-                  <td className="px-2 py-4">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium border ${
-                        job.statusType === "success"
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-red-50 text-red-700 border-red-200"
-                      }`}
-                    >
-                      {job.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-blue-600 font-medium hover:underline text-sm"
-                      onClick={() => handleViewDetailsClick(job)}
-                    >
-                      View Details
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => handleEditClick(job)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
-                      <Edit2 size={16} />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">
-                      Send
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8 font-sans">
+      <div className="bg-white rounded-xl shadow-2xl overflow-hidden max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-800">Approved Installations</h1>
         </div>
-      </div>
 
-      {/* View Details Popup */}
-      {showDetailsPopup && selectedJob && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => setShowDetailsPopup(false)}
-          />
+        {/* Table */}
+        {loading ? (
+          <div className="text-center py-10 text-gray-500">Loading...</div>
+        ) : error ? (
+          <div className="text-center py-10 text-red-500">{error}</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <div className="min-w-[768px] lg:min-w-full inline-block align-middle">
+              <div className="hidden lg:grid grid-cols-10 gap-x-4 px-6 py-3 border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <span className="col-span-2">Client Name</span>
+                <span className="text-center">No. of Vehicle</span>
+                <span>Location</span>
+                <span>Device Model</span>
+                <span className="col-span-2">Available Time</span>
+                <span className="text-center">Status</span>
+                <span className="text-center">Action</span>
+              </div>
 
-          {/* Modal */}
-          <div className="bg-white rounded-lg shadow-xl z-50 w-full max-w-md relative">
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">
-                Job Details
-              </h2>
-              <button
-                className="text-gray-400 hover:text-gray-600"
-                onClick={() => setShowDetailsPopup(false)}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 space-y-4 text-sm text-gray-700">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Client Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={selectedJob.client}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-              <div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  No. of Vehicles
-                </label>
-                <input
-                  type="number"
-                  name="vechicles"
-                  value={selectedJob.vechicles}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  name="location"
-                  value={selectedJob.location}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Model Device
-                </label>
-                <input
-                  type="text"
-                  name="device"
-                  value={selectedJob.device}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-              <div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Available Time
-                </label>
-                <input
-                  type="text"
-                  name="time"
-                  value={selectedJob.time}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  required
-                />
-              </div>
-              </div>
-              <div>
-                <strong>Status:</strong>{" "}
-                <span
-                  className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-                    selectedJob.statusType === "success"
-                      ? "bg-green-50 text-green-700 border-green-200"
-                      : "bg-red-50 text-red-700 border-red-200"
-                  }`}
+              {installations.map((job) => (
+                <div
+                  key={job.job_id}
+                  className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-10 gap-y-3 lg:gap-x-4 p-4 lg:p-6 border-b border-gray-100 hover:bg-blue-50 transition duration-100 items-center text-sm"
                 >
-                  {selectedJob.status}
-                </span>
-              </div>
+                  <div className="lg:col-span-2 font-medium text-gray-800 flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Client Name:</span>
+                    <span>{job.client_name}</span>
+                  </div>
+                  <div className="lg:text-center flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">No. of Vehicle:</span>
+                    <span className="font-medium text-gray-700">{job.admin_no_of_installations || job.no_of_installations}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Location:</span>
+                    <span>{job.location}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Device Model:</span>
+                    <span>{job.installed_solution_type}</span>
+                  </div>
+                  <div className="lg:col-span-2 flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Available Time:</span>
+                    <span className="text-gray-600">{new Date(job.available_time).toLocaleString()}</span>
+                  </div>
+                  <div className="lg:text-center flex items-center space-x-2">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Status:</span>
+                    <StatusBadge status={job.status} />
+                  </div>
+                  <div className="lg:text-center relative flex items-center space-x-2 lg:space-x-0">
+                    <span className="lg:hidden text-xs text-gray-500 w-24 font-normal">Action:</span>
+                    <ActionBlock jobId={job.job_id} vehicleCount={job.admin_no_of_installations || job.no_of_installations} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* View Details Popup */}
-{showDetailsPopup && selectedJob && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-    {/* Backdrop */}
-    <div
-      className="fixed inset-0 bg-black/50"
-      onClick={() => setShowDetailsPopup(false)}
-    />
-
-    {/* Modal */}
-    <div className="bg-white rounded-lg shadow-xl z-50 w-full max-w-md relative">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">Job Details</h2>
-        <button
-          className="text-gray-400 hover:text-gray-600"
-          onClick={() => setShowDetailsPopup(false)}
-        >
-          <X size={20} />
-        </button>
+        )}
       </div>
-
-      {/* Content */}
-      <div className="p-6 space-y-4 text-sm text-gray-700">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Client Name
-          </label>
-          <input
-            type="text"
-            value={selectedJob.client}
-            disabled
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            No. of Vehicles
-          </label>
-          <input
-            type="text"
-            value={selectedJob.vehicles}
-            disabled
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Location
-          </label>
-          <input
-            type="text"
-            value={selectedJob.location}
-            disabled
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Device Model
-          </label>
-          <input
-            type="text"
-            value={selectedJob.device}
-            disabled
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Available Time
-          </label>
-          <input
-            type="text"
-            value={selectedJob.time}
-            disabled
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-        <div>
-          <strong>Status:</strong>{" "}
-          <span
-            className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-              selectedJob.statusType === "success"
-                ? "bg-green-50 text-green-700 border-green-200"
-                : "bg-red-50 text-red-700 border-red-200"
-            }`}
-          >
-            {selectedJob.status}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
-{/* Edit Job Popup (Small) */}
-{showEditPopup && editData && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-    {/* Backdrop */}
-    <div
-      className="fixed inset-0 bg-black/50"
-      onClick={() => setShowEditPopup(false)}
-    />
-
-    {/* Modal */}
-    <div className="bg-white rounded-xl shadow-xl z-50 w-full max-w-sm relative">
-      {/* Header */}
-      <div className="flex items-center justify-center px-6 py-4 border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">Edit Job</h2>
-        <button
-          className="text-gray-400 hover:text-gray-600"
-          onClick={() => setShowEditPopup(false)}
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      {/* Form */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleEditSubmit(editData);
-        }}
-        className="p-6 space-y-4"
-      >
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            No. of Approved Devices
-          </label>
-          <input
-            type="number"
-            value={editData.approveVehicles}
-            onChange={(e) =>
-              setEditData({ ...editData, approveVehicles: e.target.value })
-            }
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter approved devices"
-          />
-        </div>
-
-        {/* Footer */}
-        <div className="flex justify-end gap-3 pt-4 border-gray-200">
-          <button
-            type="button"
-            onClick={() => setShowEditPopup(false)}
-            className="px-5 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
-          >
-            Send to Dispatcher
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
     </div>
   );
 };

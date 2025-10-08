@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
+import { useAuth } from "../Context/AuthContext";
+
 const NewAccountCreation = ({ onNext, activeStep }) => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -8,12 +11,12 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
     mobileNumber: "",
     companyName: "",
     state: "",
-    potential: "",
     address: "",
   });
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     console.log("NewAccountCreation mounted (activeStep):", activeStep);
@@ -52,7 +55,6 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
 
     if (!formData.companyName.trim()) validationErrors.companyName = "Company name is required.";
     if (!formData.state.trim()) validationErrors.state = "Please select a state.";
-    if (!formData.potential.trim()) validationErrors.potential = "Please select potential.";
     if (!formData.address.trim()) validationErrors.address = "Address is required.";
 
     setErrors(validationErrors);
@@ -60,7 +62,7 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
     return Object.keys(validationErrors).length === 0;
   };
 
-   const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -71,29 +73,42 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
     console.log("NewAccountCreation: handleSubmit called, formData:", formData);
 
     try {
+      const response = await axiosInstance.post("/clients", formData, {
+        headers: {
+          "x-user-id": user.id,
+          "x-branch-id": user.branchId,
+        },
+      });
+
+      console.log("Client created successfully:", response.data);
+
+      const createdClient = response.data.client;
+
+      // Inform parent with created client
       if (typeof onNext === "function") {
-        onNext(formData); // inform parent with data
+        onNext(createdClient);
       } else {
         console.error("NewAccountCreation: onNext is not a function");
       }
 
-      // Navigate to the next step route
-      navigate("/sales/billing");  // Adjust route path as per your router setup
-
+      // Navigate to the next step with clientId
+      navigate("/sales/billing", { state: { clientId: createdClient.id } });
     } catch (err) {
-      console.error("NewAccountCreation: error calling onNext:", err);
+      console.error("Error creating client:", err.response?.data || err.message);
     }
   };
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-3xl mx-auto p-6">
+      {/* 🛠️ FIXED: Container width changed to max-w-2xl to match BillingInformation */}
+      <div className="max-w-8xl mx-auto p-6">
         <div className="bg-white rounded-xl shadow border border-gray-100 p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="font-poppins text-2xl font-semibold text-gray-800 mb-2">
-              New account creation
-            </h1>
+          
+          {/* Header (Removed text-center and adjusted styling to match BillingInformation's clean look) */}
+          <div className="mb-8">
+             <h1 className="font-poppins text-2xl font-semibold text-gray-800">
+               New Account Creation
+             </h1>
           </div>
 
           {/* Progress Stepper */}
@@ -103,7 +118,9 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
                 <div className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-semibold text-sm ${
-                      activeStep > idx
+                      activeStep === idx
+                        ? "bg-blue-600 border-blue-600 text-white"
+                        : activeStep > idx
                         ? "bg-blue-600 border-blue-600 text-white"
                         : "bg-white border-blue-600 text-blue-600"
                     }`}
@@ -145,208 +162,179 @@ const NewAccountCreation = ({ onNext, activeStep }) => {
             ))}
           </div>
 
-          {/* Form Content */}
+          {/* Form Content - Title matched BillingInformation */}
+          <h2 className="font-poppins text-lg font-medium text-blue-600 mb-6">
+            Client Personal Information
+          </h2>
+
           <form
             onSubmit={handleSubmit}
-            className="font-poppins bg-gray-50 rounded-lg p-6 mb-6"
+            className="font-poppins" // 🛠️ FIXED: Removed outer bg-gray-50, using white background implicitly
           >
-            <div className="font-poppins bg-white rounded-lg p-6">
-              <h2 className="text-lg font-medium text-blue-600 mb-6">
-                Client Personal Information
-              </h2>
-
-              <div className="flex flex-col gap-4">
-                {/* First + Last Name */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
-                    </label>
-                    <input
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="First Name"
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none transition-all bg-white ${
-                        errors.firstName
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    />
-                    {errors.firstName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
-                    </label>
-                    <input
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Last Name"
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.lastName
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    />
-                    {errors.lastName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Email + Mobile */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      name="emailAddress"
-                      value={formData.emailAddress}
-                      onChange={handleInputChange}
-                      placeholder="mahi123@gmail.com"
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.emailAddress
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    />
-                    {errors.emailAddress && (
-                      <p className="text-red-500 text-xs mt-1">{errors.emailAddress}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mobile Number
-                    </label>
-                    <input
-                      type="tel"
-                      name="mobileNumber"
-                      value={formData.mobileNumber}
-                      onChange={handleInputChange}
-                      placeholder="9876543210"
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.mobileNumber
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    />
-                    {errors.mobileNumber && (
-                      <p className="text-red-500 text-xs mt-1">{errors.mobileNumber}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Company + State */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Company Name
-                    </label>
-                    <input
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleInputChange}
-                      placeholder="Flexpack (Pvt) (Ltd)"
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.companyName
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    />
-                    {errors.companyName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      State
-                    </label>
-                    <select
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.state
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    >
-                      <option value="">Select a state</option>
-                      <option value="Mumbai">Mumbai</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Punjab">Punjab</option>
-                      <option value="Maharashtra">Maharashtra</option>
-                    </select>
-                    {errors.state && (
-                      <p className="text-red-500 text-xs mt-1">{errors.state}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Potential */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Potential
-                    </label>
-                    <select
-                      name="potential"
-                      value={formData.potential}
-                      onChange={handleInputChange}
-                      className={`w-full max-w-xs border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
-                        errors.potential
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-                      }`}
-                    >
-                      <option value="">Select one</option>
-                      <option value="High">High</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Low">Low</option>
-                    </select>
-                    {errors.potential && (
-                      <p className="text-red-500 text-xs mt-1">{errors.potential}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Address */}
+            <div className="flex flex-col gap-4">
+              {/* First + Last Name */}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
+                    First Name
                   </label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
+                  <input
+                    name="firstName"
+                    value={formData.firstName}
                     onChange={handleInputChange}
-                    rows={3}
-                    placeholder="116, satinder jeet singh sh, nr..."
-                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white resize-none h-24 ${
-                      errors.address
+                    placeholder="First Name"
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-all bg-white ${
+                      errors.firstName
                         ? "border-red-500 focus:ring-red-200"
                         : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
                     }`}
                   />
-                  {errors.address && (
-                    <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                  {errors.firstName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
                   )}
                 </div>
-
-                {/* Submit */}
-                <div className="flex justify-center pt-4">
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white font-medium px-8 py-2 rounded-lg cursor-pointer transition hover:bg-blue-700"
-                  >
-                    SUBMIT
-                  </button>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    placeholder="Last Name"
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
+                      errors.lastName
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                    }`}
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                  )}
                 </div>
+              </div>
+
+              {/* Email + Mobile */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="emailAddress"
+                    value={formData.emailAddress}
+                    onChange={handleInputChange}
+                    placeholder="mahi123@gmail.com"
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
+                      errors.emailAddress
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                    }`}
+                  />
+                  {errors.emailAddress && (
+                    <p className="text-red-500 text-xs mt-1">{errors.emailAddress}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleInputChange}
+                    placeholder="9876543210"
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
+                      errors.mobileNumber
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                    }`}
+                  />
+                  {errors.mobileNumber && (
+                    <p className="text-red-500 text-xs mt-1">{errors.mobileNumber}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Company + State */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Company Name
+                  </label>
+                  <input
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    placeholder="Flexpack (Pvt) (Ltd)"
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
+                      errors.companyName
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                    }`}
+                  />
+                  {errors.companyName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    State
+                  </label>
+                  <select
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white ${
+                      errors.state
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                    }`}
+                  >
+                    <option value="">Select a state</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                  </select>
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Address */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address
+                </label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  rows={3}
+                  placeholder="116, satinder jeet singh sh, nr..."
+                  className={`w-full border rounded-lg px-3 py-2 text-sm outline-none bg-white resize-none h-24 ${
+                    errors.address
+                      ? "border-red-500 focus:ring-red-200"
+                      : "border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                  }`}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                )}
+              </div>
+
+              {/* Submit */}
+              <div className="flex justify-center pt-4">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white font-medium px-8 py-2 rounded-lg cursor-pointer transition hover:bg-blue-700"
+                >
+                  SUBMIT
+                </button>
               </div>
             </div>
           </form>

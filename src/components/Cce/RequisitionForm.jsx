@@ -64,11 +64,11 @@ export default function RequisitionForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 relative">
-      <div className="w-full mx-auto bg-white rounded-lg shadow-xl p-6 sm:p-8">
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-xl p-6 sm:p-8">
         {/* Top header with title, team, date */}
         <div className="flex justify-between items-center mb-8 justify-center">
           <h1 className="text-2xl font-bold text-gray-500 flex-1 text-center">Requisition Form</h1>
-          <div className="flex items-center gap-4 text-blue-600 font-semibold text-sm absolute right-14">
+          <div className="flex items-center gap-4 text-blue-600 font-semibold text-sm absolute right-40">
             <div className="flex items-center gap-2 px-3 py-1 border border-blue-600 rounded-md">
               <Users size={16} />
               <span>Team D</span>
