@@ -11,7 +11,7 @@ const getToken = () => {
 };
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "https://gtracerp-backend.onrender.com/",
     timeout: 10000,
 });
 

@@ -151,7 +151,7 @@ const NotWorkingVehicle = () => {
 
     const loadOptions = useCallback(async (inputValue) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/addClients?search=${inputValue}`);
+            const res = await fetch(`https://gtracerp-backend.onrender.com/addClients?search=${inputValue}`);
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
@@ -205,7 +205,7 @@ const NotWorkingVehicle = () => {
         
         try {
             const res = await fetch(
-                `http://localhost:5000/api/vehicles/not-working?clientId=${clientIds}`
+                `https://gtracerp-backend.onrender.com/vehicles/not-working?clientId=${clientIds}`
             );
             const json = await res.json();
 
